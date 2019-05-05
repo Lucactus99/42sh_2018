@@ -27,6 +27,8 @@ int is_builtin(struct data data, int i)
         cd_command(data, i);
         return (1);
     }
+    if (my_strcmp(data.command[i], "exit") == 0)
+        return (1);
     return (0);
 }
 
@@ -50,6 +52,15 @@ static void check_command(struct data data)
     }
 }
 
+int check_exit(struct data data)
+{
+    for (int i = 0; i < data.nbr_command; i++) {
+        if (my_strcmp(data.command[i], "exit") == 0)
+            return (get_nbr_from_arg(data.args[i]));
+    }
+    return (0);
+}
+
 int do_command(struct data data)
 {
     int status;
@@ -64,5 +75,8 @@ int do_command(struct data data)
         data.exit_status = status;
         print_error(status);
     }
+    status = check_exit(data);
+    if (status > 0)
+        return (status);
     return (data.exit_status);
 }

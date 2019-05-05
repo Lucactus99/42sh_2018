@@ -81,6 +81,7 @@ char *get_actual_command_line(char *);
 int count_commands(char *);
 void do_pipe(struct data, int);
 int do_binary(struct data, int);
+int get_nbr_from_arg(char **args);
 
 // ENV
 void print_env(char **);

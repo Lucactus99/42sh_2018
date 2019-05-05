@@ -29,14 +29,16 @@ static int find_command_2(struct data data)
 {
     int ok = 0;
 
-    for (int i = 0; i < data.nbr_command; i++)
-        data = find_command_3(data, i, &ok);
+    for (int i = 0; i < data.nbr_command; i++) {
+        if (my_strcmp(data.command[i], "exit") != 0)
+            data = find_command_3(data, i, &ok);
+    }
     if (ok != 1)
         data.exit_status = do_command(data);
     return (data.exit_status);
 }
 
-static void do_exit(char **args)
+int get_nbr_from_arg(char **args)
 {
     int nbr = 0;
 
@@ -45,6 +47,13 @@ static void do_exit(char **args)
             nbr = my_getnbr(args[1]);
         }
     }
+    return (nbr);
+}
+
+static void do_exit(char **args)
+{
+    int nbr = get_nbr_from_arg(args);
+
     if (isatty(0))
         my_putstr("exit\n");
     while (1)
@@ -56,9 +65,12 @@ int find_command(struct data data)
     int ok = 0;
 
     for (int i = 0; i < data.nbr_command; i++) {
-        if (my_strcmp(data.command[i], "exit") == 0)
-            do_exit(data.args[i]);
-        if (my_strcmp(data.command[i], "cd") == 0)
+        if (my_strcmp(data.command[i], "exit") == 0) {
+            if (i == data.nbr_command - 1)
+                do_exit(data.args[i]);
+            else
+                data.exit_status = get_nbr_from_arg(data.args[i]);
+        } else if (my_strcmp(data.command[i], "cd") == 0)
             return (cd_command(data, i));
         else
             ok = -1;
