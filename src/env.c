@@ -50,7 +50,7 @@ int setenv_command(struct data data, int command)
         my_putstr_err("setenv: Too many arguments.\n");
         return (1);
     }
-    if (my_str_isalpha(data.args[command][1]) == 0) {
+    if (my_str_isalphanum(data.args[command][1]) == 0) {
         my_putstr_err("setenv: Variable name must ");
         my_putstr_err("contain alphanumeric characters.\n");
         return (1);
