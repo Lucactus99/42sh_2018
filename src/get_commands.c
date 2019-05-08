@@ -70,7 +70,7 @@ char *get_actual_command_line(char *str)
         i = 0;
         return (NULL);
     } else
-        actual = malloc(sizeof(char) * (my_strlen(str) + 1));
+        actual = malloc(sizeof(char) * (strlen(str) + 1));
     for (; str[i] != '\0' && str[i] != ';'; i++) {
         actual[a] = str[i];
         a++;

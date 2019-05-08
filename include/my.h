@@ -42,13 +42,8 @@ struct data
 // LIB
 void my_putchar(char);
 void my_putstr(char const *);
-int my_strlen(char const *);
 int my_put_nbr(int);
-char *my_strcpy(char *, char const *);
 char *get_next_line(int);
-int my_strcmp(char const *, char const *);
-char *my_strcat(char *, char const *);
-int my_strncmp(char const *, char const *, int);
 void my_putstr_err(char const *);
 int my_str_isalphanum(char *);
 char **transform_2d(char *, char);

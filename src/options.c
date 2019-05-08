@@ -24,7 +24,7 @@ static char *put_space(char *new_str, char *str, int *a, int i)
 
 char *useless_pipe(char *str)
 {
-    char *new_str = malloc(sizeof(char) * (my_strlen(str) + 1));
+    char *new_str = malloc(sizeof(char) * (strlen(str) + 1));
     int a = 0;
 
     for (int i = 0; str[i] != '\0'; i++) {
@@ -45,10 +45,10 @@ char **add_env(struct data data, int command)
 
     for (; data.env[j] != NULL; j++);
     data.env[j] = malloc(sizeof(char) * 20);
-    data.env[j] = my_strcpy(data.env[j], data.args[command][1]);
-    data.env[j] = my_strcat(data.env[j], "=");
+    data.env[j] = strcpy(data.env[j], data.args[command][1]);
+    data.env[j] = strcat(data.env[j], "=");
     for (int i = 2; i <= data.nbr_args[command]; i++)
-        data.env[j] = my_strcat(data.env[j], data.args[command][i]);
+        data.env[j] = strcat(data.env[j], data.args[command][i]);
     data.env[j + 1] = 0;
     return (data.env);
 }

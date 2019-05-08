@@ -129,5 +129,17 @@ NAME="My big test"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
 TESTS=
-  echo "exit 45 | ls -l"
+  echo "cd ; </etc/hosts od -c | grep xx | wc >> /tmp/z -l ; cd - && echo "OK""
 [913-END]
+
+[914]
+NAME="double left redirection"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "grep Hello << END"
+  echo "Hi everybody"
+  echo "Hello world"
+  echo "goodbye everyone"
+  echo "END"
+[914-END]

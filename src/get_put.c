@@ -12,16 +12,16 @@ char **put_old_pwd(char **env, char *pwd)
     int i = 0;
 
     for (; env[i] != NULL; i++) {
-        if (my_strncmp(env[i], "OLDPWD", 6) == 0) {
-            env[i] = malloc(sizeof(char) * (my_strlen(pwd) + 7));
-            env[i] = my_strcpy(env[i], "OLDPWD=");
-            env[i] = my_strcat(env[i], pwd);
+        if (strncmp(env[i], "OLDPWD", 6) == 0) {
+            env[i] = malloc(sizeof(char) * (strlen(pwd) + 7));
+            env[i] = strcpy(env[i], "OLDPWD=");
+            env[i] = strcat(env[i], pwd);
             return (env);
         }
     }
     env[i] = malloc(sizeof(char) * 100);
-    env[i] = my_strcpy(env[i], "OLDPWD=");
-    env[i] = my_strcat(env[i], pwd);
+    env[i] = strcpy(env[i], "OLDPWD=");
+    env[i] = strcat(env[i], pwd);
     env[i + 1] = 0;
     return (env);
 }
@@ -31,9 +31,9 @@ char *get_old_pwd(char **env)
     char *str = NULL;
 
     for (int i = 0; env[i] != 0; i++) {
-        if (my_strncmp(env[i], "OLDPWD=", 7) == 0) {
-            str = malloc(sizeof(char) * my_strlen(env[i]));
-            str = my_strcpy(str, env[i]);
+        if (strncmp(env[i], "OLDPWD=", 7) == 0) {
+            str = malloc(sizeof(char) * strlen(env[i]));
+            str = strcpy(str, env[i]);
         }
     }
     if (str == NULL)
@@ -48,9 +48,9 @@ char *get_home(char **env)
     char *str = NULL;
 
     for (int i = 0; env[i]; i++) {
-        if (my_strncmp(env[i], "HOME", 4) == 0) {
-            str = malloc(sizeof(char) * my_strlen(env[i]));
-            str = my_strcpy(str, env[i]);
+        if (strncmp(env[i], "HOME", 4) == 0) {
+            str = malloc(sizeof(char) * strlen(env[i]));
+            str = strcpy(str, env[i]);
         }
     }
     if (str == NULL)

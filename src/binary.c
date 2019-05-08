@@ -18,7 +18,7 @@ static int do_pipe_first(struct data data, int i, int pipes[], int out)
     close(pipes[0]);
     if (is_builtin(data, i) == 1)
         return (out);
-    if (my_strncmp(data.command[i], "./", 2) == 0)
+    if (strncmp(data.command[i], "./", 2) == 0)
         do_binary(data, i);
     else {
         if (execve(data.command[i], data.args[i], data.env) < 0) {
@@ -73,7 +73,7 @@ int do_binary(struct data data, int command)
 void check_binary(struct data data)
 {
     for (int i = 0; i < data.nbr_command; i++) {
-        if (my_strncmp(data.command[i], "./", 2) == 0)
+        if (strncmp(data.command[i], "./", 2) == 0)
             do_binary(data, i);
     }
 }

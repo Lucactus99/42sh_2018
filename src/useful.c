@@ -30,13 +30,13 @@ int count_lines(char *str)
 int find_line_env(struct data data, int command)
 {
     int line = -1;
-    char *str = malloc(sizeof(char) * (my_strlen(data.args[command][1]) + 2));
+    char *str = malloc(sizeof(char) * (strlen(data.args[command][1]) + 2));
 
-    str = my_strcpy(str, data.args[command][1]);
-    str[my_strlen(str)] = '=';
-    str[my_strlen(str) + 1] = 0;
+    str = strcpy(str, data.args[command][1]);
+    str[strlen(str)] = '=';
+    str[strlen(str) + 1] = 0;
     for (int i = 0; data.env[i] != 0; i++) {
-        if (my_strncmp(data.env[i], str, my_strlen(str)) == 0)
+        if (strncmp(data.env[i], str, strlen(str)) == 0)
             line = i;
     }
     return (line);
@@ -55,18 +55,18 @@ char *is_existing(struct data data, char *actual)
 {
     char *tmp = NULL;
 
-    if (my_strcmp("setenv", actual) == 0)
+    if (strcmp("setenv", actual) == 0)
         return (actual);
     if (access(actual, F_OK) == 0) {
-        tmp = malloc(sizeof(char) * my_strlen(actual) + 1);
-        tmp = my_strcpy(tmp, actual);
+        tmp = malloc(sizeof(char) * strlen(actual) + 1);
+        tmp = strcpy(tmp, actual);
         return (tmp);
     }
     for (int i = 0; data.path[i] != NULL && data.path[i][0] != 0; i++) {
         tmp = malloc(sizeof(char) * 40);
-        tmp = my_strcpy(tmp, data.path[i]);
-        tmp = my_strcat(tmp, "/");
-        tmp = my_strcat(tmp, actual);
+        tmp = strcpy(tmp, data.path[i]);
+        tmp = strcat(tmp, "/");
+        tmp = strcat(tmp, actual);
         if (access(tmp, F_OK) == 0 && check_error_path(tmp) == 0)
             return (tmp);
         free(tmp);

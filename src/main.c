@@ -11,7 +11,7 @@ static int main_loop(struct data data)
 {
     char *str = "lucas";
 
-    while (str != NULL && my_strcmp(str, "exit") != 0) {
+    while (str != NULL && strcmp(str, "exit") != 0) {
         if (isatty(0))
             my_putstr("§> ");
         str = get_next_line(0);
@@ -27,7 +27,7 @@ static char **new_path_to_env(char **env)
 
     for (; env[j] != NULL; j++);
     env[j] = malloc(sizeof(char) * 50);
-    env[j] = my_strcpy(env[j],
+    env[j] = strcpy(env[j],
     "PATH=/bin:/usr/local/bin:/sbin:/usr/bin:/usr/sbin");
     env[j + 1] = 0;
     return (env);

@@ -42,7 +42,7 @@ static char *get_redirection_name(char *actual)
 {
     int i = 0;
     int a = 0;
-    char *str = malloc(sizeof(char) * my_strlen(actual));
+    char *str = malloc(sizeof(char) * strlen(actual));
 
     i = check_double_opposite_redirections(actual, i);
     if (i < 0)
@@ -53,10 +53,32 @@ static char *get_redirection_name(char *actual)
         a++;
     }
     str[a] = '\0';
-    if (my_strlen(str) <= 1) {
+    if (strlen(str) <= 1) {
         my_putstr_err("Missing name for redirect.\n");
         return (NULL);
     }
+    return (str);
+}
+
+char *do_double_left_redirection(char *word)
+{
+    char *str = NULL;
+    char *tmp = NULL;
+
+    do {
+        if (str == NULL) {
+            if (tmp != NULL)
+                str = strdup(tmp);
+        } else {
+            if (tmp != NULL) {
+                str = strcat(str, "\n");
+                str = strcat(str, tmp);
+            }
+        }
+        if (isatty(0))
+            my_putstr("? ");
+        tmp = get_next_line(0);
+    } while (tmp != NULL && strcmp(tmp, word) != 0);
     return (str);
 }
 
@@ -71,6 +93,9 @@ struct data manage_redirection(struct data data, char *actual)
             data.exit_status = 1;
         ambiguous = is_ambiguous(actual);
         data = check_redirection_errors(data, ambiguous);
+        if (data.redirection == 4) {
+            data.redirection_name = do_double_left_redirection(data.redirection_name);
+        }
     }
     return (data);
 }

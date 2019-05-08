@@ -60,7 +60,7 @@ static void print_cd_err(char *str)
         my_putstr_err(str);
         my_putstr_err(": Permission denied.\n");
     }
-    if (my_strcmp(str, "cd") == 0) {
+    if (strcmp(str, "cd") == 0) {
         my_putstr_err(str);
         my_putstr_err(": Too many arguments.\n");
     }
@@ -75,13 +75,13 @@ int cd_command(struct data data, int command)
         return (1);
     }
     if (data.args[command][1] == NULL ||
-    my_strcmp(data.args[command][1], "~") == 0) {
+    strcmp(data.args[command][1], "~") == 0) {
         return (cd_home_command(data, command));
-    } else if (my_strcmp(data.args[command][1], "-") == 0)
+    } else if (strcmp(data.args[command][1], "-") == 0)
         return (cd_old_command(data));
     else {
         getcwd(pwd, sizeof(pwd));
-        if (my_strcmp(data.args[command][1], ".") != 0)
+        if (strcmp(data.args[command][1], ".") != 0)
             data.env = put_old_pwd(data.env, pwd);
         if (chdir(data.args[command][1]) < 0) {
             print_cd_err(data.args[command][1]);

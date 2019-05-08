@@ -47,8 +47,8 @@ char **add_args(char **args, char *argument)
     int i = 0;
 
     for (; args[i] != NULL; i++);
-    args[i] = malloc(sizeof(char *) * my_strlen(argument));
-    args[i] = my_strcpy(args[i], argument);
+    args[i] = malloc(sizeof(char *) * strlen(argument));
+    args[i] = strcpy(args[i], argument);
     args[i + 1] = NULL;
     return (args);
 }
@@ -60,8 +60,8 @@ char ***put_args(char **av, int nbr_command)
     for (int h = 0; av[h] != NULL; h++) {
         tmp[h] = transform_2d(av[h], ' ');
         if (tmp[h][0] == NULL) {
-            tmp[h][0] = malloc(sizeof(char) * (my_strlen(av[h]) + 1));
-            tmp[h][0] = my_strcpy(tmp[h][0], av[h]);
+            tmp[h][0] = malloc(sizeof(char) * (strlen(av[h]) + 1));
+            tmp[h][0] = strcpy(tmp[h][0], av[h]);
         }
     }
     return (tmp);

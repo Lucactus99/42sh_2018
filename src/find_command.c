@@ -9,10 +9,10 @@
 
 static struct data find_command_3(struct data data, int i, int *ok)
 {
-    if (!my_strcmp(data.command[i], "setenv") && data.nbr_command == 1) {
+    if (!strcmp(data.command[i], "setenv") && data.nbr_command == 1) {
         ok[0] = 1;
         data.exit_status = setenv_command(data, i);
-    } else if (my_strcmp(data.command[i], "unsetenv") == 0) {
+    } else if (strcmp(data.command[i], "unsetenv") == 0) {
         data.exit_status = unsetenv_command(data, i);
         ok[0] = 1;
     } else {
@@ -30,7 +30,7 @@ static int find_command_2(struct data data)
     int ok = 0;
 
     for (int i = 0; i < data.nbr_command; i++) {
-        if (my_strcmp(data.command[i], "exit") != 0)
+        if (strcmp(data.command[i], "exit") != 0)
             data = find_command_3(data, i, &ok);
     }
     if (ok != 1)
@@ -65,12 +65,12 @@ int find_command(struct data data)
     int ok = 0;
 
     for (int i = 0; i < data.nbr_command; i++) {
-        if (my_strcmp(data.command[i], "exit") == 0) {
+        if (strcmp(data.command[i], "exit") == 0) {
             if (i == data.nbr_command - 1)
                 do_exit(data.args[i]);
             else
                 data.exit_status = get_nbr_from_arg(data.args[i]);
-        } else if (my_strcmp(data.command[i], "cd") == 0)
+        } else if (strcmp(data.command[i], "cd") == 0)
             return (cd_command(data, i));
         else
             ok = -1;
