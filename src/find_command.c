@@ -60,11 +60,79 @@ static void do_exit(char **args)
         exit(nbr);
 }
 
+int do_alias(struct data data, int i)
+{
+    static char *path = NULL;
+    FILE *fp = NULL;
+
+    if (path == NULL) {
+        path = get_home(data.env);
+        printf("=>%s\n", path);
+        if (path == NULL)
+            return (0);
+        strcat(path, "/");
+        strcat(path, "alias");
+    }
+    fp = fopen(path, "a");
+    if (fp == NULL)
+        return (0);
+    fprintf(fp, "%s\n", data.args[i][1]);
+    for (int j = 0; data.args[i][2][j] != '\0'; j++) {
+        if (data.args[i][2][j] != '"' && data.args[i][2][j] != 39)
+            fwrite(&data.args[i][2][j], sizeof(char), 1, fp);
+    }
+    fwrite("\n\n", sizeof(char), 2, fp);
+    fclose(fp);
+    return (0);
+}
+
+struct data check_alias(struct data data, int i)
+{
+    static char *path = NULL;
+    FILE *fp;
+    size_t n = 0;
+    ssize_t len = 0;
+    char *str = NULL;
+
+    if (path == NULL) {
+        path = get_home(data.env);
+        if (path == NULL)
+            return (data);
+        strcat(path, "/");
+        strcat(path, "alias");
+    }
+    fp = fopen(path, "r");
+    if (fp == NULL)
+        return (data);
+    while ((len = getline(&str, &n, fp)) > 0) {
+        str[len - 1] = '\0';
+        if (strcmp(str, data.command[i]) == 0) {
+            if ((len = getline(&str, &n, fp)) > 0) {
+                str[len - 1] = '\0';
+                data.command[i] = str;
+                data.args = put_args(data.command, data.nbr_command);
+                data.command[i] = get_program_name(data.command[i]);
+                fclose(fp);
+                return (data);
+            }
+        }
+        while (str[0] != '\0' && str[0] != '\n') {
+            if (getline(&str, &n, fp) < 0)
+                return (data);
+        }
+    }
+    fclose(fp);
+    return (data);
+}
+
 int find_command(struct data data)
 {
     int ok = 0;
 
     for (int i = 0; i < data.nbr_command; i++) {
+        data = check_alias(data, i);
+        if (strcmp(data.command[i], "alias") == 0)
+            return (do_alias(data, i));
         if (strcmp(data.command[i], "exit") == 0) {
             if (i == data.nbr_command - 1)
                 do_exit(data.args[i]);

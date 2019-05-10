@@ -35,7 +35,12 @@ int get_nbr_args(char *av)
 {
     int count = 0;
 
-    for (int i = 0; av[i] != 0; i++) {
+    for (int i = 0; av[i] != '\0'; i++) {
+        if (av[i] == '"' || av[i] == 39) {
+            i++;
+            while (av[i] != '"' && av[i] == 39 && av[i] != '\0')
+                i++;
+        }
         if (av[i] == ' ')
             count++;
     }

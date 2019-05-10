@@ -24,13 +24,20 @@ char **transform_2d(char *str, char sep)
     int j = 0;
     int k = 0;
     int i = 0;
+    int quote = 0;
 
     for (; str[i] != '\0'; i++) {
-        if (str[i] == sep) {
+        if (str[i] == sep && quote == 0) {
             str[i++] = '\0';
             str_2d[j] = &str[k];
             j++;
             k = i;
+        }
+        if (str[i] == '"' || str[i] == 39) {
+            if (quote == 0)
+                quote = 1;
+            else
+                quote = 0;
         }
     }
     str[i++] = '\0';

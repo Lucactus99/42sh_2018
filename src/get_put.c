@@ -47,15 +47,15 @@ char *get_home(char **env)
 {
     char *str = NULL;
 
-    for (int i = 0; env[i]; i++) {
-        if (strncmp(env[i], "HOME", 4) == 0) {
+    for (int i = 0; env[i] != NULL; i++) {
+        if (strncmp(env[i], "HOME=", 5) == 0) {
             str = malloc(sizeof(char) * strlen(env[i]));
             str = strcpy(str, env[i]);
         }
     }
     if (str == NULL)
         return (NULL);
-    while (str[0] != '=')
+    while (str[0] != '=' && str[0] != '\0')
         str++;
     str++;
     return (str);
