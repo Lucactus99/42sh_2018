@@ -60,6 +60,23 @@ static void do_exit(char **args)
         exit(nbr);
 }
 
+int check_existing_alias(FILE *fp, char *actual)
+{
+    size_t n = 0;
+    char *str = NULL;
+    ssize_t len = 0;
+
+    fseek(fp, 0, SEEK_SET);
+    while ((len = getline(&str, &n, fp)) > 0) {
+        str[len - 1] = '\0';
+        if (strcmp(str, actual) == 0) {
+            return (1);
+        }
+    }
+    fseek(fp, 0, SEEK_END);
+    return (0);
+}
+
 int do_alias(struct data data, int i)
 {
     static char *path = NULL;
@@ -67,16 +84,16 @@ int do_alias(struct data data, int i)
 
     if (path == NULL) {
         path = get_home(data.env);
-        printf("=>%s\n", path);
         if (path == NULL)
             return (0);
         strcat(path, "/");
         strcat(path, "alias");
     }
-    fp = fopen(path, "a");
+    fp = fopen(path, "r+");
     if (fp == NULL)
         return (0);
-    fprintf(fp, "%s\n", data.args[i][1]);
+    if (check_existing_alias(fp, data.args[i][1]) == 0)
+        fprintf(fp, "%s\n", data.args[i][1]);
     for (int j = 0; data.args[i][2][j] != '\0'; j++) {
         if (data.args[i][2][j] != '"' && data.args[i][2][j] != 39)
             fwrite(&data.args[i][2][j], sizeof(char), 1, fp);
