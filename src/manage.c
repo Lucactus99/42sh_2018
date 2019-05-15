@@ -67,6 +67,23 @@ static struct data manage_command_type(struct data data, char *actual)
     return (data);
 }
 
+int is_binary_condition_verified(struct data data)
+{
+    if (data.is_binary_op == 0)
+        return (0);
+    if (data.is_binary_op == 1) {
+        if (data.exit_status == 0)
+            return (1);
+        return (0);
+    }
+    if (data.is_binary_op == 2) {
+        if (data.exit_status != 0)
+            return (1);
+        return (0);
+    }
+    return (0);
+}
+
 struct data manage_user_input(struct data data, char *str)
 {
     char *actual = NULL;
@@ -84,7 +101,10 @@ struct data manage_user_input(struct data data, char *str)
         data.nbr_command = count_commands(actual);
         data.redirection = is_redirection(actual);
         data = manage_command_type(data, actual);
-        actual = get_actual_command_line(str);
+        if (is_binary_condition_verified(data) == 1)
+            actual = get_actual_command_line(str);
+        else
+            actual = get_actual_command_line(NULL);;
     }
     return (data);
 }

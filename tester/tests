@@ -167,3 +167,14 @@ TESTS=
   echo "which where cd ls date time env echo lol"
   echo "where"
 [916-END]
+
+[917]
+NAME="&& and ||"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "ls -l && ls a || ls"
+  echo "cd .. && ls && ls a"
+  echo "ls && ls && ls || ls && ls"
+  echo "date || cd toto && ls"
+[917-END]

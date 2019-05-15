@@ -37,6 +37,7 @@ struct data
     int redirection;
     char *redirection_name;
     int is_builtin;
+    int is_binary_op;
 };
 
 // ALIAS

@@ -64,6 +64,18 @@ static void do_exit(char **args)
         exit(nbr);
 }
 
+int check_echo(struct data data, int i)
+{
+    if (strcmp(data.command[i], "echo") == 0) {
+        if (data.args[i][1] != NULL && strcmp(data.args[i][1], "$?") == 0) {
+            my_put_nbr(data.exit_status);
+            my_putchar('\n');
+            return (0);
+        }
+    }
+    return (-1);
+}
+
 int find_command(struct data data)
 {
     int ok = 0;
@@ -80,7 +92,7 @@ int find_command(struct data data)
         } else if (strcmp(data.command[i], "cd") == 0)
             return (cd_command(data, i));
         else
-            ok = -1;
+            ok = check_echo(data, i);
     }
     if (ok == -1)
         data.exit_status = find_command_2(data);

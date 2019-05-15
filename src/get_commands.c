@@ -51,10 +51,20 @@ char **get_tab_command(struct data data, char *str)
     return (data.command);
 }
 
+int is_next_command(char *str, int i)
+{
+    if (str[i + 1] == '\0')
+        return (0);
+    if (str[i] == ' ' || str[i] == ';' ||
+    (str[i] == '&' && str[i + 1] == '&') || (str[i] == '|' && str[i + 1] == '|'))
+        return (1);
+    return (0);
+}
+
 static int check_next_command(char *str, int nbr)
 {
     for (int i = nbr; str[i] != '\0'; i++) {
-        if (str[i] != ' ' && str[i] != ';')
+        if (is_next_command(str, i) == 1)
             return (nbr + 1);
     }
     return (84);
