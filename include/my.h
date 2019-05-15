@@ -23,6 +23,8 @@
 #include <dirent.h>
 #include <ctype.h>
 
+#define XSIGNAL(n, h)	if (signal(n, h) == SIG_ERR) return (-1)
+
 struct data
 {
     char *program_name;

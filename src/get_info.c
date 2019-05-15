@@ -55,7 +55,7 @@ char **modify_path(struct data data, int command)
     return (data.path);
 }
 
-char **my_strdup_2d(char **tab)
+static char **my_strdup_2d(char **tab)
 {
     char **tmp = malloc(sizeof(char *) * get_nbr_lines(tab));
     int a = 0;
