@@ -11,7 +11,7 @@ CC		:= gcc
 
 NAME		:= 42sh
 FILES		:= cd command env errors_2 errors get_info get_put main options useful arguments binary find_command get_commands manage redirections redirections_errors \
-                   get_next_line my_put_nbr my_putchar my_putstr_err my_putstr transform_2d my_getnbr my_str_isalphanum
+                   get_next_line my_put_nbr my_putchar my_putstr_err my_putstr transform_2d my_getnbr my_str_isalphanum alias where
 
 SRC_NAMES 	:= $(addsuffix .c, $(FILES))
 SRC		:= $(addprefix src/, $(SRC_NAMES))

@@ -51,7 +51,7 @@ int check_error_path(char *str)
     return (0);
 }
 
-char *is_existing(struct data data, char *actual)
+char *is_existing(struct data data, char *actual, char *diff)
 {
     char *tmp = NULL;
 
@@ -67,8 +67,10 @@ char *is_existing(struct data data, char *actual)
         tmp = strcpy(tmp, data.path[i]);
         tmp = strcat(tmp, "/");
         tmp = strcat(tmp, actual);
-        if (access(tmp, F_OK) == 0 && check_error_path(tmp) == 0)
-            return (tmp);
+        if (access(tmp, F_OK) == 0 && check_error_path(tmp) == 0) {
+            if (diff == NULL || strcmp(tmp, diff) != 0)
+                return (tmp);
+        }
         free(tmp);
     }
     return (NULL);

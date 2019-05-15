@@ -39,6 +39,11 @@ struct data
     int is_builtin;
 };
 
+// ALIAS
+int check_existing_alias(FILE *fp, char *actual);
+struct data check_alias(struct data data, int i);
+int do_alias(struct data data, int i);
+
 // LIB
 void my_putchar(char);
 void my_putstr(char const *);
@@ -55,7 +60,7 @@ int count_lines(char *);
 char **get_path(char **);
 char *get_program_name(char *);
 int get_nbr_args(char *);
-char *is_existing(struct data, char *);
+char *is_existing(struct data, char *, char *);
 char *clean_str(char *);
 void print_error(int);
 void print_error_5(int);
@@ -97,6 +102,7 @@ char *get_home(char **);
 char *get_old_pwd(char **);
 char **put_old_pwd(char **, char *);
 int cd_command(struct data, int);
+int do_where_which(struct data data, int i);
 
 // ERRORS
 void check_binary(struct data);

@@ -143,3 +143,27 @@ TESTS=
   echo "goodbye everyone"
   echo "END"
 [914-END]
+
+[915]
+NAME="alias"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "alias toto 'cd ..'"
+  echo "toto"
+  echo "alias tata ls -l"
+  echo "tata"
+[915-END]
+
+[916]
+NAME="where & which"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "where toto ls"
+  echo "where which"
+  echo "where ls -l"
+  echo "which where cd"
+  echo "which where cd ls date time env echo lol"
+  echo "where"
+[916-END]
