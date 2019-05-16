@@ -55,25 +55,24 @@ int check_double_opposite_redirections(char *actual, int i)
     return (i);
 }
 
-struct data check_redirection_errors(struct data data, char *ambiguous)
+void check_redirection_errors(sh_t *sh, char *ambiguous)
 {
     if (strcmp("left", ambiguous) == 0 &&
-    data.redirection_name != NULL) {
+    sh->redirection_name != NULL) {
         my_putstr_err("Ambiguous input redirect.\n");
-        data.redirection_name = NULL;
-        data.exit_status = 1;
+        sh->redirection_name = NULL;
+        sh->exit_status = 1;
     }
     if (strcmp("right", ambiguous) == 0 &&
-    data.redirection_name != NULL) {
+    sh->redirection_name != NULL) {
         my_putstr_err("Ambiguous output redirect.\n");
-        data.redirection_name = NULL;
-        data.exit_status = 1;
+        sh->redirection_name = NULL;
+        sh->exit_status = 1;
     }
     if (strcmp("missing", ambiguous) == 0 &&
-    data.redirection_name != NULL) {
+    sh->redirection_name != NULL) {
         my_putstr_err("Missing name for redirect.\n");
-        data.redirection_name = NULL;
-        data.exit_status = 1;
+        sh->redirection_name = NULL;
+        sh->exit_status = 1;
     }
-    return (data);
 }

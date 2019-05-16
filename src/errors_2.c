@@ -30,9 +30,9 @@ int check_error_pipe(char *str, int i)
     return (84);
 }
 
-int put_command_not_found(struct data data, int i)
+int put_command_not_found(sh_t *sh, int i)
 {
-    my_putstr_err(data.command[i]);
+    my_putstr_err(sh->command[i]);
     my_putstr_err(": Command not found.\n");
     return (1);
 }

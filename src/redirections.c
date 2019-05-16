@@ -82,20 +82,19 @@ char *do_double_left_redirection(char *word)
     return (str);
 }
 
-struct data manage_redirection(struct data data, char *actual)
+void manage_redirection(sh_t *sh, char *actual)
 {
     char *ambiguous = NULL;
 
-    if (data.redirection == 1 || data.redirection == 2 ||
-    data.redirection == 3 || data.redirection == 4) {
-        data.redirection_name = get_redirection_name(actual);
-        if (data.redirection_name == NULL)
-            data.exit_status = 1;
+    if (sh->redirection == 1 || sh->redirection == 2 ||
+    sh->redirection == 3 || sh->redirection == 4) {
+        sh->redirection_name = get_redirection_name(actual);
+        if (sh->redirection_name == NULL)
+            sh->exit_status = 1;
         ambiguous = is_ambiguous(actual);
-        data = check_redirection_errors(data, ambiguous);
-        if (data.redirection == 4) {
-            data.redirection_name = do_double_left_redirection(data.redirection_name);
+        check_redirection_errors(sh, ambiguous);
+        if (sh->redirection == 4) {
+            sh->redirection_name = do_double_left_redirection(sh->redirection_name);
         }
     }
-    return (data);
 }

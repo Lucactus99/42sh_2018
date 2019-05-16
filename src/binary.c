@@ -7,22 +7,22 @@
 
 #include "my.h"
 
-static int do_pipe_first(struct data data, int i, int pipes[], int out)
+static int do_pipe_first(sh_t *sh, int i, int pipes[], int out)
 {
-    if (data.command[i + 1] != NULL)
+    if (sh->command[i + 1] != NULL)
         dup2(pipes[1], 1);
     else {
-        if (data.redirection != 0)
+        if (sh->redirection != 0)
             dup2(out, 1);
     }
     close(pipes[0]);
-    if (is_builtin(data, i) == 1)
+    if (is_builtin(sh, i) == 1)
         return (out);
-    if (strncmp(data.command[i], "./", 2) == 0)
-        do_binary(data, i);
+    if (strncmp(sh->command[i], "./", 2) == 0)
+        do_binary(sh, i);
     else {
-        if (execve(data.command[i], data.args[i], data.env) < 0) {
-            my_putstr_err(data.command[0]);
+        if (execve(sh->command[i], sh->args[i], sh->env) < 0) {
+            my_putstr_err(sh->command[0]);
             my_putstr_err(": Permission denied.\n");
         }
     }
@@ -38,42 +38,42 @@ static void close_fd_pipes(int out, int pipes[], int fd_in)
         wait(NULL);
 }
 
-void do_pipe(struct data data, int i)
+void do_pipe(sh_t *sh, int i)
 {
     int pipes[2];
-    int out = open_type(data.redirection, data.redirection_name);
+    int out = open_type(sh->redirection, sh->redirection_name);
     static int fd_in = 0;
 
     pipe(pipes);
     if (fork() == 0) {
         dup2(fd_in, 0);
-        out = do_pipe_first(data, i, pipes, out);
+        out = do_pipe_first(sh, i, pipes, out);
         exit(0);
     } else {
         close(pipes[1]);
         fd_in = pipes[0];
-        if (data.command[i + 1] == NULL) {
+        if (sh->command[i + 1] == NULL) {
             close_fd_pipes(out, pipes, fd_in);
             exit(0);
         }
     }
 }
 
-int do_binary(struct data data, int command)
+void do_binary(sh_t *sh, int command)
 {
-    data.command[command] += 2;
-    if (execve(data.command[command], data.args[command], data.env) <= 0) {
+    sh->command[command] += 2;
+    if (execve(sh->command[command], sh->args[command], sh->env) <= 0) {
         my_putstr_err("./");
-        my_putstr_err(data.command[command]);
+        my_putstr_err(sh->command[command]);
         my_putstr_err(": Exec format error. Wrong Architecture.\n");
     }
     exit(0);
 }
 
-void check_binary(struct data data)
+void check_binary(sh_t *sh)
 {
-    for (int i = 0; i < data.nbr_command; i++) {
-        if (strncmp(data.command[i], "./", 2) == 0)
-            do_binary(data, i);
+    for (int i = 0; i < sh->nbr_command; i++) {
+        if (strncmp(sh->command[i], "./", 2) == 0)
+            do_binary(sh, i);
     }
 }

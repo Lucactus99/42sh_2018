@@ -7,68 +7,68 @@
 
 #include "my.h"
 
-char **set_env(struct data data, int command)
+char **set_env(sh_t *sh, int command)
 {
     int i = 0;
-    int length = find_line_env(data, command);
+    int length = find_line_env(sh, command);
 
     if (length >= 0) {
-        for (; data.env[length][i] != '='; i++);
+        for (; sh->env[length][i] != '='; i++);
         i++;
-        for (int j = i; data.env[length][j + 1] != 0; j++)
-            data.env[length][j] = 0;
-        for (int j = 2; j <= data.nbr_args[command]; j++) {
-            data.env[length] = strcat(data.env[length],
-            data.args[command][j]);
+        for (int j = i; sh->env[length][j + 1] != 0; j++)
+            sh->env[length][j] = 0;
+        for (int j = 2; j <= sh->nbr_args[command]; j++) {
+            sh->env[length] = strcat(sh->env[length],
+            sh->args[command][j]);
         }
     } else
-        data.env = add_env(data, command);
-    return (data.env);
+        sh->env = add_env(sh, command);
+    return (sh->env);
 }
 
-char **unset_env(struct data data, int command)
+char **unset_env(sh_t *sh, int command)
 {
     int j = 0;
-    int length = find_line_env(data, command);
+    int length = find_line_env(sh, command);
 
     if (length >= 0) {
-        data.env[length] = NULL;
-        for (j = length; data.env[j + 1] != 0; j++)
-            data.env[j] = data.env[j + 1];
-        data.env[j] = 0;
+        sh->env[length] = NULL;
+        for (j = length; sh->env[j + 1] != 0; j++)
+            sh->env[j] = sh->env[j + 1];
+        sh->env[j] = 0;
     }
-    return (data.env);
+    return (sh->env);
 }
 
-int setenv_command(struct data data, int command)
+int setenv_command(sh_t *sh, int command)
 {
-    if (data.nbr_args[command] == 0) {
-        print_env(data.env);
+    if (sh->nbr_args[command] == 0) {
+        print_env(sh->env);
         return (0);
     }
-    if (data.nbr_args[command] >= 3) {
+    if (sh->nbr_args[command] >= 3) {
         my_putstr_err("setenv: Too many arguments.\n");
         return (1);
     }
-    if (my_str_isalphanum(data.args[command][1]) == 0) {
+    if (my_str_isalphanum(sh->args[command][1]) == 0) {
         my_putstr_err("setenv: Variable name must ");
         my_putstr_err("contain alphanumeric characters.\n");
         return (1);
     }
-    if (strncmp(data.args[command][1], "PATH", 4) == 0)
-        data.path = modify_path(data, command);
+    if (strncmp(sh->args[command][1], "PATH", 4) == 0)
+        sh->path = modify_path(sh, command);
     else
-        data.env = set_env(data, command);
+        sh->env = set_env(sh, command);
     return (0);
 }
 
-int unsetenv_command(struct data data, int command)
+int unsetenv_command(sh_t *sh, int command)
 {
-    if (data.args[command][1] == NULL) {
+    if (sh->args[command][1] == NULL) {
         my_putstr_err("unsetenv: Too few arguments.\n");
         return (1);
     } else
-        data.env = unset_env(data, command);
+        sh->env = unset_env(sh, command);
     return (0);
 }
 

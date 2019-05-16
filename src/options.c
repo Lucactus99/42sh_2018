@@ -39,18 +39,18 @@ char *useless_pipe(char *str)
     return (new_str);
 }
 
-char **add_env(struct data data, int command)
+char **add_env(sh_t *sh, int command)
 {
     int j = 0;
 
-    for (; data.env[j] != NULL; j++);
-    data.env[j] = malloc(sizeof(char) * 20);
-    data.env[j] = strcpy(data.env[j], data.args[command][1]);
-    data.env[j] = strcat(data.env[j], "=");
-    for (int i = 2; i <= data.nbr_args[command]; i++)
-        data.env[j] = strcat(data.env[j], data.args[command][i]);
-    data.env[j + 1] = 0;
-    return (data.env);
+    for (; sh->env[j] != NULL; j++);
+    sh->env[j] = malloc(sizeof(char) * 20);
+    sh->env[j] = strcpy(sh->env[j], sh->args[command][1]);
+    sh->env[j] = strcat(sh->env[j], "=");
+    for (int i = 2; i <= sh->nbr_args[command]; i++)
+        sh->env[j] = strcat(sh->env[j], sh->args[command][i]);
+    sh->env[j + 1] = 0;
+    return (sh->env);
 }
 
 static int count_commands_type(char *str, int i, int *counter, int *neighbor)

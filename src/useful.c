@@ -7,10 +7,10 @@
 
 #include "my.h"
 
-void free_command(struct data data, char *str)
+void free_command(sh_t *sh, char *str)
 {
-    for (int i = 0; i < data.nbr_command; i++) {
-        free(data.command[i]);
+    for (int i = 0; i < sh->nbr_command; i++) {
+        free(sh->command[i]);
     }
     free(str);
 }
@@ -27,16 +27,16 @@ int count_lines(char *str)
     return (count);
 }
 
-int find_line_env(struct data data, int command)
+int find_line_env(sh_t *sh, int command)
 {
     int line = -1;
-    char *str = malloc(sizeof(char) * (strlen(data.args[command][1]) + 2));
+    char *str = malloc(sizeof(char) * (strlen(sh->args[command][1]) + 2));
 
-    str = strcpy(str, data.args[command][1]);
+    str = strcpy(str, sh->args[command][1]);
     str[strlen(str)] = '=';
     str[strlen(str) + 1] = 0;
-    for (int i = 0; data.env[i] != 0; i++) {
-        if (strncmp(data.env[i], str, strlen(str)) == 0)
+    for (int i = 0; sh->env[i] != 0; i++) {
+        if (strncmp(sh->env[i], str, strlen(str)) == 0)
             line = i;
     }
     return (line);
@@ -51,7 +51,7 @@ int check_error_path(char *str)
     return (0);
 }
 
-char *is_existing(struct data data, char *actual, char *diff)
+char *is_existing(sh_t *sh, char *actual, char *diff)
 {
     char *tmp = NULL;
 
@@ -62,9 +62,9 @@ char *is_existing(struct data data, char *actual, char *diff)
         tmp = strcpy(tmp, actual);
         return (tmp);
     }
-    for (int i = 0; data.path[i] != NULL && data.path[i][0] != 0; i++) {
+    for (int i = 0; sh->path[i] != NULL && sh->path[i][0] != 0; i++) {
         tmp = malloc(sizeof(char) * 40);
-        tmp = strcpy(tmp, data.path[i]);
+        tmp = strcpy(tmp, sh->path[i]);
         tmp = strcat(tmp, "/");
         tmp = strcat(tmp, actual);
         if (access(tmp, F_OK) == 0 && check_error_path(tmp) == 0) {

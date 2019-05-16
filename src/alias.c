@@ -24,13 +24,13 @@ int check_existing_alias(FILE *fp, char *actual)
     return (0);
 }
 
-int do_alias(struct data data, int i)
+int do_alias(sh_t *sh, int i)
 {
     static char *path = NULL;
     FILE *fp = NULL;
 
     if (path == NULL) {
-        path = get_home(data.env);
+        path = get_home(sh->env);
         if (path == NULL)
             return (0);
         strcat(path, "/");
@@ -39,14 +39,14 @@ int do_alias(struct data data, int i)
     fp = fopen(path, "r+");
     if (fp == NULL)
         return (0);
-    if (check_existing_alias(fp, data.args[i][1]) == 0)
-        fprintf(fp, "%s\n", data.args[i][1]);
-    for (int a = 2; data.args[i][a] != NULL; a++) {
-        for (int j = 0; data.args[i][a][j] != '\0'; j++) {
-            if (data.args[i][a][j] != '"' && data.args[i][a][j] != 39)
-                fwrite(&data.args[i][a][j], sizeof(char), 1, fp);
+    if (check_existing_alias(fp, sh->args[i][1]) == 0)
+        fprintf(fp, "%s\n", sh->args[i][1]);
+    for (int a = 2; sh->args[i][a] != NULL; a++) {
+        for (int j = 0; sh->args[i][a][j] != '\0'; j++) {
+            if (sh->args[i][a][j] != '"' && sh->args[i][a][j] != 39)
+                fwrite(&sh->args[i][a][j], sizeof(char), 1, fp);
         }
-        if (data.args[i][a + 1] != NULL)
+        if (sh->args[i][a + 1] != NULL)
             fwrite(" ", sizeof(char), 1, fp);
     }
     fwrite("\n\n", sizeof(char), 2, fp);
@@ -54,7 +54,7 @@ int do_alias(struct data data, int i)
     return (0);
 }
 
-struct data check_alias(struct data data, int i)
+int check_alias(sh_t *sh, int i)
 {
     static char *path = NULL;
     FILE *fp;
@@ -63,32 +63,32 @@ struct data check_alias(struct data data, int i)
     char *str = NULL;
 
     if (path == NULL) {
-        path = get_home(data.env);
+        path = get_home(sh->env);
         if (path == NULL)
-            return (data);
+            return (0);
         strcat(path, "/");
         strcat(path, "alias");
     }
     fp = fopen(path, "r");
     if (fp == NULL)
-        return (data);
+        return (0);
     while ((len = getline(&str, &n, fp)) > 0) {
         str[len - 1] = '\0';
-        if (strcmp(str, data.command[i]) == 0) {
+        if (strcmp(str, sh->command[i]) == 0) {
             if ((len = getline(&str, &n, fp)) > 0) {
                 str[len - 1] = '\0';
-                data.command[i] = str;
-                data.args = put_args(data.command, data.nbr_command);
-                data.command[i] = get_program_name(data.command[i]);
+                sh->command[i] = str;
+                sh->args = put_args(sh->command, sh->nbr_command);
+                sh->command[i] = get_program_name(sh->command[i]);
                 fclose(fp);
-                return (data);
+                return (0);
             }
         }
         while (str[0] != '\0' && str[0] != '\n') {
             if (getline(&str, &n, fp) < 0)
-                return (data);
+                return (0);
         }
     }
     fclose(fp);
-    return (data);
+    return (0);
 }

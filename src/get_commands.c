@@ -16,39 +16,39 @@ static int get_length_one(char *str, int i)
     return (++length);
 }
 
-static char **loop_tab_command(struct data data, int *a, int *b, char *str)
+static char **loop_tab_command(sh_t *sh, int *a, int *b, char *str)
 {
     int i = 0;
 
     for (; str[i] != '\0' && str[i] != '>' && str[i] != '<'; i++) {
         if (str[i + 1] == '|') {
-            data.command[a[0]][b[0]] = '\0';
+            sh->command[a[0]][b[0]] = '\0';
             a[0]++;
             i += 2;
             b[0] = 0;
-            data.command[a[0]] = malloc(sizeof(char) * get_length_one(str, i));
+            sh->command[a[0]] = malloc(sizeof(char) * get_length_one(str, i));
         } else {
-            data.command[a[0]][b[0]] = str[i];
+            sh->command[a[0]][b[0]] = str[i];
             b[0]++;
         }
     }
     if (str[i] == '>' || str[i] == '<') {
-        if (data.command[a[0]][b[0] - 1] == ' ')
+        if (sh->command[a[0]][b[0] - 1] == ' ')
             b[0]--;
     }
-    return (data.command);
+    return (sh->command);
 }
 
-char **get_tab_command(struct data data, char *str)
+char **get_tab_command(sh_t *sh, char *str)
 {
     int a = 0;
     int b = 0;
 
-    data.command[a] = malloc(sizeof(char) * get_length_one(str, 0));
-    data.command = loop_tab_command(data, &a, &b, str);
-    data.command[a][b] = '\0';
-    data.command[a + 1] = NULL;
-    return (data.command);
+    sh->command[a] = malloc(sizeof(char) * get_length_one(str, 0));
+    sh->command = loop_tab_command(sh, &a, &b, str);
+    sh->command[a][b] = '\0';
+    sh->command[a + 1] = NULL;
+    return (sh->command);
 }
 
 int is_next_command(char *str, int i)

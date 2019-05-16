@@ -7,20 +7,20 @@
 
 #include "my.h"
 
-static int cd_home_command(struct data data, int command)
+static int cd_home_command(sh_t *sh, int command)
 {
     char pwd[128];
 
     getcwd(pwd, sizeof(pwd));
-    data.env = put_old_pwd(data.env, pwd);
-    if (chdir(get_home(data.env)) < 0) {
+    sh->env = put_old_pwd(sh->env, pwd);
+    if (chdir(get_home(sh->env)) < 0) {
         if (errno == 14)
             my_putstr_err("cd: No home directory.\n");
         else if (errno == 20) {
-            my_putstr_err(data.args[command][1]);
+            my_putstr_err(sh->args[command][1]);
             my_putstr_err(": Not a directory.\n");
         } else {
-            my_putstr_err(get_home(data.env));
+            my_putstr_err(get_home(sh->env));
             my_putstr_err(": No such file or directory.\n");
         }
         return (1);
@@ -28,22 +28,22 @@ static int cd_home_command(struct data data, int command)
     return (0);
 }
 
-static int cd_old_command(struct data data)
+static int cd_old_command(sh_t *sh)
 {
     char pwd[128];
 
-    data.old_pwd = get_old_pwd(data.env);
-    if (data.old_pwd == NULL) {
+    sh->old_pwd = get_old_pwd(sh->env);
+    if (sh->old_pwd == NULL) {
         my_putstr_err("cd: No $OLDPWD variable set.\n");
         return (1);
     }
     getcwd(pwd, sizeof(pwd));
-    if (chdir(data.old_pwd) < 0) {
-        my_putstr_err(data.old_pwd);
+    if (chdir(sh->old_pwd) < 0) {
+        my_putstr_err(sh->old_pwd);
         my_putstr_err(": No such file or directory.\n");
         return (1);
     } else
-        data.env = put_old_pwd(data.env, pwd);
+        sh->env = put_old_pwd(sh->env, pwd);
     return (0);
 }
 
@@ -66,25 +66,25 @@ static void print_cd_err(char *str)
     }
 }
 
-int cd_command(struct data data, int command)
+int cd_command(sh_t *sh, int command)
 {
     char pwd[128];
 
-    if (data.nbr_args[command] >= 2) {
-        print_cd_err(data.args[command][0]);
+    if (sh->nbr_args[command] >= 2) {
+        print_cd_err(sh->args[command][0]);
         return (1);
     }
-    if (data.args[command][1] == NULL ||
-    strcmp(data.args[command][1], "~") == 0) {
-        return (cd_home_command(data, command));
-    } else if (strcmp(data.args[command][1], "-") == 0)
-        return (cd_old_command(data));
+    if (sh->args[command][1] == NULL ||
+    strcmp(sh->args[command][1], "~") == 0) {
+        return (cd_home_command(sh, command));
+    } else if (strcmp(sh->args[command][1], "-") == 0)
+        return (cd_old_command(sh));
     else {
         getcwd(pwd, sizeof(pwd));
-        if (strcmp(data.args[command][1], ".") != 0)
-            data.env = put_old_pwd(data.env, pwd);
-        if (chdir(data.args[command][1]) < 0) {
-            print_cd_err(data.args[command][1]);
+        if (strcmp(sh->args[command][1], ".") != 0)
+            sh->env = put_old_pwd(sh->env, pwd);
+        if (chdir(sh->args[command][1]) < 0) {
+            print_cd_err(sh->args[command][1]);
             return (1);
         }
     }

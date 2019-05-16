@@ -1,0 +1,48 @@
+.TH 42SH 1 "26 May 2019" "Astron 6.20.00"
+.SH NAME
+42sh \- C shell with command execution handling
+.SH SYNOPSIS
+.B 42sh \fR[\fB\-h\fR]
+.br
+.SH DESCRIPTION
+\fI42sh\fR is an enhanced but completely compatible version of the Berkeley
+UNIX C shell, \fItcsh\fR(1).
+It is a command language interpreter usable both as an interactive login
+shell and a shell script command processor.
+It includes a command-line editor (see \fBThe command-line editor\fR),
+programmable word completion (see \fBCompletion and listing\fR),
+spelling correction (see \fBSpelling correction\fR),
+a history mechanism (see \fBHistory substitution\fR),
+job control (see \fBJobs\fR)
+and a C-like syntax.
+The \fBNEW FEATURES\fR section describes major enhancements of \fI42sh\fR
+over \fItcsh\fR(1).
+Throughout this manual, features of
+\fI42sh\fR not found in most \fItcsh\fR(1) implementations
+(specifically, the 4.4BSD \fItcsh\fR)
+are labeled with '(+)', and features which are present in \fItcsh\fR(1)
+but not usually documented are labeled with '(u)'.
+.SH BUILTINS
+.PD 0
+.TP 4
+\fBSETENV\fR    - change or add an environment variable
+.TP 4
+\fBUNSETENV\fR  - delete an environment variable
+.TP 4
+\fBCD\fR        - change working directory
+.TP 4
+\fBECHO\fR      - display a line of text
+.TP 4
+\fBEXIT\fR      - cause normal process termination
+.SH VERSION
+This manual documents 42sh 1.00.00 (Astron) 2019-05-26.
+.SH AUTHORS
+.PD 0
+.TP 2
+Benjamin Kuhnel
+.TP 2
+Hugo Jeanmaire
+.TP 2
+Lucas De Curtis
+.TP 2
+Thomas Renck

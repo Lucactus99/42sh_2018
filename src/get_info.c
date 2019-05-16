@@ -16,43 +16,43 @@ int find_path(char **env, int j)
     return (j);
 }
 
-char **put_path(struct data data, int command)
+char **put_path(sh_t *sh, int command)
 {
     int j = 0;
 
-    if (data.env[0] != NULL && data.env[0] != 0) {
-        j = find_path(data.env, j);
-        if (data.env[j + 1] == NULL && strncmp(data.env[j], "PATH", 4)) {
-            data.env[j + 1] = malloc(sizeof(char) * 40);
+    if (sh->env[0] != NULL && sh->env[0] != 0) {
+        j = find_path(sh->env, j);
+        if (sh->env[j + 1] == NULL && strncmp(sh->env[j], "PATH", 4)) {
+            sh->env[j + 1] = malloc(sizeof(char) * 40);
             j++;
         }
     } else
-        data.env[0] = malloc(sizeof(char) * 40);
-    for (int i = 0; i < data.nbr_args[command]; i++) {
+        sh->env[0] = malloc(sizeof(char) * 40);
+    for (int i = 0; i < sh->nbr_args[command]; i++) {
         if (i == 0) {
-            data.env[j] = strcpy(data.env[j], data.path[i]);
-            data.env[j] = strcat(data.env[j], "=");
+            sh->env[j] = strcpy(sh->env[j], sh->path[i]);
+            sh->env[j] = strcat(sh->env[j], "=");
         } else
-            data.env[j] = strcat(data.env[j], data.path[i]);
+            sh->env[j] = strcat(sh->env[j], sh->path[i]);
     }
-    return (data.env);
+    return (sh->env);
 }
 
-char **modify_path(struct data data, int command)
+char **modify_path(sh_t *sh, int command)
 {
-    if (data.path[0] != NULL) {
-        for (int i = 0; data.path[i + 1] != 0; i++) {
-            data.path[i] = NULL;
-            free(data.path[i]);
+    if (sh->path[0] != NULL) {
+        for (int i = 0; sh->path[i + 1] != 0; i++) {
+            sh->path[i] = NULL;
+            free(sh->path[i]);
         }
     }
-    for (int i = 0; i < data.nbr_args[command]; i++)
-        data.path[i] = malloc(sizeof(char) * 20);
-    for (int i = 0; i < data.nbr_args[command]; i++)
-        data.path[i] = strcpy(data.path[i], data.args[command][i + 1]);
-    data.path[data.nbr_args[command]] = NULL;
-    data.env = put_path(data, command);
-    return (data.path);
+    for (int i = 0; i < sh->nbr_args[command]; i++)
+        sh->path[i] = malloc(sizeof(char) * 20);
+    for (int i = 0; i < sh->nbr_args[command]; i++)
+        sh->path[i] = strcpy(sh->path[i], sh->args[command][i + 1]);
+    sh->path[sh->nbr_args[command]] = NULL;
+    sh->env = put_path(sh, command);
+    return (sh->path);
 }
 
 static char **my_strdup_2d(char **tab)

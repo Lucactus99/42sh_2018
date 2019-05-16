@@ -7,19 +7,18 @@
 
 #include "my.h"
 
-static struct data manage_command_fill(struct data data, char *actual)
+static void manage_command_fill(sh_t *sh, char *actual)
 {
-    if (data.redirection_name != NULL || data.redirection == 0) {
-        data.nbr_args = malloc(sizeof(int) * data.nbr_command);
-        for (int i = 0; data.command[i]; i++)
-            data.nbr_args[i] = get_nbr_args(data.command[i]);
-        data.args = put_args(data.command, data.nbr_command);
-        for (int i = 0; data.command[i]; i++)
-            data.command[i] = get_program_name(data.command[i]);
-        data.exit_status = find_command(data);
-        free_command(data, actual);
+    if (sh->redirection_name != NULL || sh->redirection == 0) {
+        sh->nbr_args = malloc(sizeof(int) * sh->nbr_command);
+        for (int i = 0; sh->command[i]; i++)
+            sh->nbr_args[i] = get_nbr_args(sh->command[i]);
+        sh->args = put_args(sh->command, sh->nbr_command);
+        for (int i = 0; sh->command[i]; i++)
+            sh->command[i] = get_program_name(sh->command[i]);
+        sh->exit_status = find_command(sh);
+        free_command(sh, actual);
     }
-    return (data);
 }
 
 char *modify_actual_redirection(char *actual, char *redirection)
@@ -47,44 +46,44 @@ char *modify_actual_redirection(char *actual, char *redirection)
     return (str);
 }
 
-static struct data manage_command_type(struct data data, char *actual)
+static int manage_command_type(sh_t *sh, char *actual)
 {
-    if (data.nbr_command == 84) {
+    if (sh->nbr_command == 84) {
         my_putstr_err("Invalid null command.\n");
-        data.exit_status = 1;
+        sh->exit_status = 1;
     } else {
-        data.command = malloc(sizeof(char *) * (data.nbr_command + 1));
-        data.command = get_tab_command(data, actual);
-        data = manage_redirection(data, actual);
-        if (data.redirection == 4) {
-            actual = modify_actual_redirection(actual, data.redirection_name);
-            data.redirection = 0;
-            data.nbr_command = 2;
-            return (manage_command_type(data, actual));
+        sh->command = malloc(sizeof(char *) * (sh->nbr_command + 1));
+        sh->command = get_tab_command(sh, actual);
+        manage_redirection(sh, actual);
+        if (sh->redirection == 4) {
+            actual = modify_actual_redirection(actual, sh->redirection_name);
+            sh->redirection = 0;
+            sh->nbr_command = 2;
+            return (manage_command_type(sh, actual));
         }
-        data = manage_command_fill(data, actual);
+        manage_command_fill(sh, actual);
     }
-    return (data);
+    return (0);
 }
 
-int is_binary_condition_verified(struct data data)
+int is_binary_condition_verified(sh_t *sh)
 {
-    if (data.is_binary_op == 0)
+    if (sh->is_binary_op == 0)
         return (0);
-    if (data.is_binary_op == 1) {
-        if (data.exit_status == 0)
+    if (sh->is_binary_op == 1) {
+        if (sh->exit_status == 0)
             return (1);
         return (0);
     }
-    if (data.is_binary_op == 2) {
-        if (data.exit_status != 0)
+    if (sh->is_binary_op == 2) {
+        if (sh->exit_status != 0)
             return (1);
         return (0);
     }
     return (0);
 }
 
-struct data manage_user_input(struct data data, char *str)
+void manage_user_input(sh_t *sh, char *str)
 {
     char *actual = NULL;
 
@@ -94,19 +93,18 @@ struct data manage_user_input(struct data data, char *str)
         actual = get_actual_command_line(str);
         actual = NULL;
         str = "lucas";
-        data.exit_status = 1;
+        sh->exit_status = 1;
     }
     while (actual != NULL) {
         actual = clean_str(actual);
-        data.nbr_command = count_commands(actual);
-        data.redirection = is_redirection(actual);
-        data = manage_command_type(data, actual);
-        if (is_binary_condition_verified(data) == 1)
+        sh->nbr_command = count_commands(actual);
+        sh->redirection = is_redirection(actual);
+        manage_command_type(sh, actual);
+        if (is_binary_condition_verified(sh) == 1)
             actual = get_actual_command_line(str);
         else
             actual = get_actual_command_line(NULL);;
     }
-    return (data);
 }
 
 static int is_whitespace(char c)

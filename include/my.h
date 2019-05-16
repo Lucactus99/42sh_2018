@@ -25,7 +25,7 @@
 
 #define XSIGNAL(n, h)	if (signal(n, h) == SIG_ERR) return (-1)
 
-struct data
+typedef struct data
 {
     char *program_name;
     int *nbr_args;
@@ -40,12 +40,12 @@ struct data
     char *redirection_name;
     int is_builtin;
     int is_binary_op;
-};
+} sh_t;
 
 // ALIAS
 int check_existing_alias(FILE *fp, char *actual);
-struct data check_alias(struct data data, int i);
-int do_alias(struct data data, int i);
+int check_alias(sh_t *sh, int i);
+int do_alias(sh_t *sh, int i);
 
 // LIB
 void my_putchar(char);
@@ -58,12 +58,12 @@ char **transform_2d(char *, char);
 int my_getnbr(char *);
 
 // USEFUL
-void free_command(struct data, char *);
+void free_command(sh_t *sh, char *);
 int count_lines(char *);
 char **get_path(char **);
 char *get_program_name(char *);
 int get_nbr_args(char *);
-char *is_existing(struct data, char *, char *);
+char *is_existing(sh_t *sh, char *, char *);
 char *clean_str(char *);
 void print_error(int);
 void print_error_5(int);
@@ -72,53 +72,53 @@ int count_redirections(char *);
 char ***put_args(char **, int);
 char **add_args(char **, char *);
 int get_nbr_lines(char **);
-int is_builtin(struct data, int);
+int is_builtin(sh_t *sh, int);
 char *useless_pipe(char *);
 
 // COMMANDS
-int do_command(struct data);
-int find_command(struct data);
+int do_command(sh_t *sh);
+int find_command(sh_t *sh);
 int open_type(int, char *);
-char **get_tab_command(struct data, char *);
+char **get_tab_command(sh_t *sh, char *);
 char *get_actual_command_line(char *);
 int count_commands(char *);
-void do_pipe(struct data, int);
-int do_binary(struct data, int);
+void do_pipe(sh_t *sh, int);
+void do_binary(sh_t *sh, int);
 int get_nbr_from_arg(char **args);
 
 // ENV
 void print_env(char **);
-char **add_env(struct data, int);
-int find_line_env(struct data, int);
-char **set_env(struct data, int);
-char **unset_env(struct data, int);
-int setenv_command(struct data, int);
-int unsetenv_command(struct data, int);
+char **add_env(sh_t *sh, int);
+int find_line_env(sh_t *sh, int);
+char **set_env(sh_t *sh, int);
+char **unset_env(sh_t *sh, int);
+int setenv_command(sh_t *sh, int);
+int unsetenv_command(sh_t *sh, int);
 
 // PATH
-char **modify_path(struct data, int);
-char **put_path(struct data, int);
-char **rm_path(struct data);
+char **modify_path(sh_t *sh, int);
+char **put_path(sh_t *sh, int);
+char **rm_path(sh_t *sh);
 
 // BUILTIN
 char *get_home(char **);
 char *get_old_pwd(char **);
 char **put_old_pwd(char **, char *);
-int cd_command(struct data, int);
-int do_where_which(struct data data, int i);
+int cd_command(sh_t *sh, int);
+int do_where_which(sh_t *sh, int i);
 
 // ERRORS
-void check_binary(struct data);
+void check_binary(sh_t *sh);
 int is_redirection(char *);
 int check_error_pipe(char *, int);
 int check_redirections(int, int, char *);
 int check_double_opposite_redirections(char *, int);
-struct data check_redirection_errors(struct data, char *);
-int put_command_not_found(struct data, int);
+void check_redirection_errors(sh_t *sh, char *);
+int put_command_not_found(sh_t *sh, int);
 int pipe_after_redirection(char *);
 
 // GLOBAL
-struct data manage_user_input(struct data, char *);
-struct data manage_redirection(struct data, char *);
+void manage_user_input(sh_t *sh, char *);
+void manage_redirection(sh_t *sh, char *);
 
 #endif //MY_H_

@@ -16,71 +16,71 @@ int open_type(int type, char *filename)
     return (0);
 }
 
-int is_builtin(struct data data, int i)
+int is_builtin(sh_t *sh, int i)
 {
-    if (data.redirection == 4) {
-        print_env(transform_2d(data.redirection_name, '\n'));
+    if (sh->redirection == 4) {
+        print_env(transform_2d(sh->redirection_name, '\n'));
         return (1);
     }
-    if (strcmp(data.command[i], "setenv") == 0 ||
-    strcmp(data.command[i], "env") == 0) {
-        print_env(data.env);
+    if (strcmp(sh->command[i], "setenv") == 0 ||
+    strcmp(sh->command[i], "env") == 0) {
+        print_env(sh->env);
         return (1);
     }
-    if (strcmp(data.command[i], "cd") == 0) {
-        cd_command(data, i);
+    if (strcmp(sh->command[i], "cd") == 0) {
+        cd_command(sh, i);
         return (1);
     }
-    if (strcmp(data.command[i], "exit") == 0)
+    if (strcmp(sh->command[i], "exit") == 0)
         return (1);
     return (0);
 }
 
-static void check_command(struct data data)
+static void check_command(sh_t *sh)
 {
-    int out = open_type(data.redirection, data.redirection_name);
+    int out = open_type(sh->redirection, sh->redirection_name);
 
-    if (data.nbr_command == 1) {
-        check_binary(data);
-        if (data.redirection != 0)
+    if (sh->nbr_command == 1) {
+        check_binary(sh);
+        if (sh->redirection != 0)
             dup2(out, 1);
-        if (data.redirection == 3)
-            data.args[0] = add_args(data.args[0], data.redirection_name);
-        if (execve(data.command[0], data.args[0], data.env) < 0) {
-            my_putstr_err(data.command[0]);
+        if (sh->redirection == 3)
+            sh->args[0] = add_args(sh->args[0], sh->redirection_name);
+        if (execve(sh->command[0], sh->args[0], sh->env) < 0) {
+            my_putstr_err(sh->command[0]);
             my_putstr_err(": Permission denied.\n");
         }
     } else {
-        for (int i = 0; i < data.nbr_command; i++)
-            do_pipe(data, i);
+        for (int i = 0; i < sh->nbr_command; i++)
+            do_pipe(sh, i);
     }
 }
 
-int check_exit(struct data data)
+int check_exit(sh_t *sh)
 {
-    for (int i = 0; i < data.nbr_command; i++) {
-        if (strcmp(data.command[i], "exit") == 0)
-            return (get_nbr_from_arg(data.args[i]));
+    for (int i = 0; i < sh->nbr_command; i++) {
+        if (strcmp(sh->command[i], "exit") == 0)
+            return (get_nbr_from_arg(sh->args[i]));
     }
     return (0);
 }
 
-int do_command(struct data data)
+int do_command(sh_t *sh)
 {
     int status;
 
-    if (fork() == 0 && data.path[0] != NULL) {
-        check_command(data);
+    if (fork() == 0 && sh->path[0] != NULL) {
+        check_command(sh);
         exit(0);
     } else
         wait(&status);
-    data.exit_status = WEXITSTATUS(status);
+    sh->exit_status = WEXITSTATUS(status);
     if (WIFSIGNALED(status) == 1) {
-        data.exit_status = status;
+        sh->exit_status = status;
         print_error(status);
     }
-    status = check_exit(data);
+    status = check_exit(sh);
     if (status > 0)
         return (status);
-    return (data.exit_status);
+    return (sh->exit_status);
 }
