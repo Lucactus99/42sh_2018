@@ -20,7 +20,9 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <dirent.h>
+#include <time.h>
 #include <ctype.h>
 
 #define XSIGNAL(n, h)	if (signal(n, h) == SIG_ERR) return (-1)
@@ -41,6 +43,9 @@ typedef struct data
     int is_builtin;
     int is_binary_op;
 } sh_t;
+
+int put_in_history(sh_t *sh, int i);
+int do_history(sh_t *sh);
 
 // ALIAS
 int check_existing_alias(FILE *fp, char *actual);

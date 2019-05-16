@@ -27,12 +27,15 @@ int check_existing_alias(FILE *fp, char *actual)
 int do_alias(sh_t *sh, int i)
 {
     static char *path = NULL;
+    char *tmp = NULL;
     FILE *fp = NULL;
 
     if (path == NULL) {
-        path = get_home(sh->env);
-        if (path == NULL)
+        tmp = get_home(sh->env);
+        if (tmp == NULL || tmp[0] == '\0')
             return (0);
+        path = malloc(sizeof(char) * (strlen(tmp) + strlen("/alias") + 1));
+        strcpy(path, tmp);
         strcat(path, "/");
         strcat(path, "alias");
     }
@@ -57,15 +60,18 @@ int do_alias(sh_t *sh, int i)
 int check_alias(sh_t *sh, int i)
 {
     static char *path = NULL;
+    char *tmp = NULL;
     FILE *fp;
     size_t n = 0;
     ssize_t len = 0;
     char *str = NULL;
 
     if (path == NULL) {
-        path = get_home(sh->env);
-        if (path == NULL)
+        tmp = get_home(sh->env);
+        if (tmp == NULL || tmp[0] == '\0')
             return (0);
+        path = malloc(sizeof(char) * (strlen(tmp) + strlen("/alias") + 1));
+        strcpy(path, tmp);
         strcat(path, "/");
         strcat(path, "alias");
     }

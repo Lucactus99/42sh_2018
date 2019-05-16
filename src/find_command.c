@@ -94,9 +94,12 @@ int find_command(sh_t *sh)
     int ok = 0;
 
     for (int i = 0; i < sh->nbr_command; i++) {
+        put_in_history(sh, i);
         check_alias(sh, i);
         if (strcmp(sh->command[i], "alias") == 0)
             return (do_alias(sh, i));
+        if (strcmp(sh->command[i], "history") == 0)
+            return (do_history(sh));
         if (strcmp(sh->command[i], "exit") == 0) {
             if (i == sh->nbr_command - 1)
                 do_exit(sh->args[i]);
