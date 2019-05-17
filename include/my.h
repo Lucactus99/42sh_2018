@@ -23,6 +23,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <time.h>
+#include <termios.h>
 #include <ctype.h>
 
 #define XSIGNAL(n, h)	if (signal(n, h) == SIG_ERR) return (-1)
@@ -44,7 +45,8 @@ typedef struct data
     int is_binary_op;
 } sh_t;
 
-int put_in_history(sh_t *sh, int i);
+// HISTORY
+void put_in_history(sh_t *sh, int i);
 int do_history(sh_t *sh);
 
 // ALIAS
@@ -111,6 +113,8 @@ char *get_old_pwd(char **);
 char **put_old_pwd(char **, char *);
 int cd_command(sh_t *sh, int);
 int do_where_which(sh_t *sh, int i);
+void is_exit(sh_t *sh, int i);
+int check_echo(sh_t *sh, int i);
 
 // ERRORS
 void check_binary(sh_t *sh);
@@ -121,9 +125,12 @@ int check_double_opposite_redirections(char *, int);
 void check_redirection_errors(sh_t *sh, char *);
 int put_command_not_found(sh_t *sh, int);
 int pipe_after_redirection(char *);
+char *modify_actual_redirection(char *actual, char *redirection);
 
 // GLOBAL
 void manage_user_input(sh_t *sh, char *);
 void manage_redirection(sh_t *sh, char *);
+void print_prompt(sh_t *sh);
+void siginthandling(int sig_num);
 
 #endif //MY_H_

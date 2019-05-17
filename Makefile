@@ -11,13 +11,14 @@ CC		:= gcc
 
 NAME		:= 42sh
 FILES		:= cd command env errors_2 errors get_info get_put main options useful arguments binary find_command get_commands manage redirections redirections_errors \
-                   get_next_line my_put_nbr my_putchar my_putstr_err my_putstr transform_2d my_getnbr my_str_isalphanum alias where history
+                   get_next_line my_put_nbr my_putchar my_putstr_err my_putstr transform_2d my_getnbr my_str_isalphanum alias where history get_actual_command_line prompt pipe\
+                   check_alias echo is_redirection exit clean_str
 
 SRC_NAMES 	:= $(addsuffix .c, $(FILES))
 SRC		:= $(addprefix src/, $(SRC_NAMES))
 
 CINC		:= -I include/
-CFLAGS		:= -W -Wall -Wextra -pedantic -g
+CFLAGS		:= -W -Wall -Wextra -pedantic -g -lncurses
 
 OBJ             := $(SRC:src/%.c=obj/%.o)
 
