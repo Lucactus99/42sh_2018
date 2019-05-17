@@ -38,24 +38,6 @@ char *check_binary_op(char *str)
     return (tmp);
 }
 
-void print_prompt(sh_t *sh)
-{
-    char pwd[128];
-
-    if (isatty(0)) {
-        getcwd(pwd, sizeof(pwd));
-        my_putstr("\033[1;36m");
-        my_putstr(pwd);
-        if (sh != NULL && sh->exit_status == 0) {
-            my_putstr("\033[0m ");
-            my_putstr("\033[1;32m§> \033[0m");
-        } else {
-            my_putstr("\033[0m ");
-            my_putstr("\033[1;31m§> \033[0m");
-        }
-    }
-}
-
 static int main_loop(sh_t *sh)
 {
     char *str = "lucas";
@@ -83,15 +65,6 @@ static char **new_path_to_env(char **env)
     "PATH=/bin:/usr/local/bin:/sbin:/usr/bin:/usr/sbin");
     env[j + 1] = 0;
     return (env);
-}
-
-void siginthandling(int sig_num)
-{
-    sh_t *sh = NULL;
-
-    (void)sig_num;
-    my_putstr("\n");
-    print_prompt(sh);
 }
 
 int main(int ac, char **av, char **env)

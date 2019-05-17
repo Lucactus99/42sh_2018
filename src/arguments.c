@@ -7,28 +7,12 @@
 
 #include "my.h"
 
-static int check_pipe(char c, int redirection, int *pipe)
+static int move_inc(char *av, int i)
 {
-    if (c == '|') {
-        if (redirection > pipe[0])
-            return (1);
-        pipe[0]++;
-    }
-    return (0);
-}
-
-int pipe_after_redirection(char *str)
-{
-    int pipe = 0;
-    int redirection = 0;
-
-    for (int i = 0; str[i] != '\0'; i++) {
-        if (check_pipe(str[i], redirection, &pipe) == 1)
-            return (1);
-        if (str[i] == '>' || str[i] == '<')
-            redirection = pipe + 1;
-    }
-    return (0);
+    i++;
+    while (av[i] != '"' && av[i] == 39 && av[i] != '\0')
+        i++;
+    return (i);
 }
 
 int get_nbr_args(char *av)
@@ -36,11 +20,8 @@ int get_nbr_args(char *av)
     int count = 0;
 
     for (int i = 0; av[i] != '\0'; i++) {
-        if (av[i] == '"' || av[i] == 39) {
-            i++;
-            while (av[i] != '"' && av[i] == 39 && av[i] != '\0')
-                i++;
-        }
+        if (av[i] == '"' || av[i] == 39)
+            i = move_inc(av, i);
         if (av[i] == ' ')
             count++;
     }

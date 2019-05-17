@@ -24,26 +24,22 @@ int check_existing_alias(FILE *fp, char *actual)
     return (0);
 }
 
-int do_alias(sh_t *sh, int i)
+static char *get_path_alias(sh_t *sh, char *path)
 {
-    static char *path = NULL;
     char *tmp = NULL;
-    FILE *fp = NULL;
 
-    if (path == NULL) {
-        tmp = get_home(sh->env);
-        if (tmp == NULL || tmp[0] == '\0')
-            return (0);
-        path = malloc(sizeof(char) * (strlen(tmp) + strlen("/alias") + 1));
-        strcpy(path, tmp);
-        strcat(path, "/");
-        strcat(path, "alias");
-    }
-    fp = fopen(path, "r+");
-    if (fp == NULL)
-        return (0);
-    if (check_existing_alias(fp, sh->args[i][1]) == 0)
-        fprintf(fp, "%s\n", sh->args[i][1]);
+    tmp = get_home(sh->env);
+    if (tmp == NULL || tmp[0] == '\0')
+        return (NULL);
+    path = malloc(sizeof(char) * (strlen(tmp) + strlen("/alias") + 1));
+    strcpy(path, tmp);
+    strcat(path, "/");
+    strcat(path, "alias");
+    return (path);
+}
+
+static void write_alias(sh_t *sh, int i, FILE *fp)
+{
     for (int a = 2; sh->args[i][a] != NULL; a++) {
         for (int j = 0; sh->args[i][a][j] != '\0'; j++) {
             if (sh->args[i][a][j] != '"' && sh->args[i][a][j] != 39)
@@ -53,48 +49,23 @@ int do_alias(sh_t *sh, int i)
             fwrite(" ", sizeof(char), 1, fp);
     }
     fwrite("\n\n", sizeof(char), 2, fp);
-    fclose(fp);
-    return (0);
 }
 
-int check_alias(sh_t *sh, int i)
+int do_alias(sh_t *sh, int i)
 {
     static char *path = NULL;
-    char *tmp = NULL;
-    FILE *fp;
-    size_t n = 0;
-    ssize_t len = 0;
-    char *str = NULL;
+    FILE *fp = NULL;
 
     if (path == NULL) {
-        tmp = get_home(sh->env);
-        if (tmp == NULL || tmp[0] == '\0')
+        if ((path = get_path_alias(sh, path)) == NULL)
             return (0);
-        path = malloc(sizeof(char) * (strlen(tmp) + strlen("/alias") + 1));
-        strcpy(path, tmp);
-        strcat(path, "/");
-        strcat(path, "alias");
     }
-    fp = fopen(path, "r");
+    fp = fopen(path, "r+");
     if (fp == NULL)
-        return (0);
-    while ((len = getline(&str, &n, fp)) > 0) {
-        str[len - 1] = '\0';
-        if (strcmp(str, sh->command[i]) == 0) {
-            if ((len = getline(&str, &n, fp)) > 0) {
-                str[len - 1] = '\0';
-                sh->command[i] = str;
-                sh->args = put_args(sh->command, sh->nbr_command);
-                sh->command[i] = get_program_name(sh->command[i]);
-                fclose(fp);
-                return (0);
-            }
-        }
-        while (str[0] != '\0' && str[0] != '\n') {
-            if (getline(&str, &n, fp) < 0)
-                return (0);
-        }
-    }
+        exit(84);
+    if (check_existing_alias(fp, sh->args[i][1]) == 0)
+        fprintf(fp, "%s\n", sh->args[i][1]);
+    write_alias(sh, i, fp);
     fclose(fp);
     return (0);
 }

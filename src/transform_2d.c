@@ -18,6 +18,17 @@ static int count_lines(char *str, char sep)
     return (count);
 }
 
+static int is_quote(int quote, int i, char *str)
+{
+    if (str[i] == '"' || str[i] == 39) {
+        if (quote == 0)
+            return (1);
+        else
+            return (0);
+    }
+    return (quote);
+}
+
 char **transform_2d(char *str, char sep)
 {
     char **str_2d = malloc(sizeof(char *) * (count_lines(str, sep) + 2));
@@ -33,17 +44,11 @@ char **transform_2d(char *str, char sep)
             j++;
             k = i;
         }
-        if (str[i] == '"' || str[i] == 39) {
-            if (quote == 0)
-                quote = 1;
-            else
-                quote = 0;
-        }
+        quote = is_quote(quote, i, str);
     }
     str[i++] = '\0';
     str_2d[j] = &str[k];
     j++;
-    k = i;
     str_2d[j] = NULL;
     return (str_2d);
 }

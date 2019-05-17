@@ -7,37 +7,6 @@
 
 #include "my.h"
 
-static int is_redirection_left(char *actual, int i)
-{
-    if (actual[i] == '>') {
-        if (actual[i + 1] == '>')
-            return (2);
-        return (1);
-    }
-    return (0);
-}
-
-static int is_redirection_right(char *actual, int i)
-{
-    if (actual[i] == '<') {
-        if (actual[i + 1] == '<')
-            return (4);
-        return (3);
-    }
-    return (0);
-}
-
-int is_redirection(char *actual)
-{
-    for (int i = 0; actual[i] != '\0'; i++) {
-        if (is_redirection_left(actual, i) > 0)
-            return (is_redirection_left(actual, i));
-        if (is_redirection_right(actual, i) > 0)
-            return (is_redirection_right(actual, i));
-    }
-    return (0);
-}
-
 static char *get_redirection_name(char *actual)
 {
     int i = 0;
@@ -60,7 +29,7 @@ static char *get_redirection_name(char *actual)
     return (str);
 }
 
-char *do_double_left_redirection(char *word)
+static char *do_db_left_redirection(char *word)
 {
     char *str = NULL;
     char *tmp = NULL;
@@ -94,7 +63,7 @@ void manage_redirection(sh_t *sh, char *actual)
         ambiguous = is_ambiguous(actual);
         check_redirection_errors(sh, ambiguous);
         if (sh->redirection == 4) {
-            sh->redirection_name = do_double_left_redirection(sh->redirection_name);
+            sh->redirection_name = do_db_left_redirection(sh->redirection_name);
         }
     }
 }

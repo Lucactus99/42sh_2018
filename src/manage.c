@@ -21,31 +21,6 @@ static void manage_command_fill(sh_t *sh, char *actual)
     }
 }
 
-char *modify_actual_redirection(char *actual, char *redirection)
-{
-    char *str = NULL;
-    char *command = NULL;
-    int length = 0;
-    int a = 0;
-    int i = 0;
-
-    for (; actual[i + 1] != '<' && actual[i + 1] != '\0'; i++)
-        length++;
-    command = malloc(sizeof(char) * (length + 1));
-    command[length] = '\0';
-    for (i = 0; actual[i + 1] != '<' && actual[i + 1] != '\0'; i++)
-        command[a++] = actual[i];
-    if (actual[i + 1] == '\0')
-        return (NULL);
-    length = strlen("echo ") + strlen(redirection) + strlen(" | ") + strlen(command);
-    str = malloc(sizeof(char) * (length + 1));
-    str = strcat(str, "echo ");
-    str = strcat(str, redirection);
-    str = strcat(str, " | ");
-    str = strcat(str, command);
-    return (str);
-}
-
 static int manage_command_type(sh_t *sh, char *actual)
 {
     if (sh->nbr_command == 84) {
@@ -105,26 +80,4 @@ void manage_user_input(sh_t *sh, char *str)
         else
             actual = get_actual_command_line(NULL);;
     }
-}
-
-static int is_whitespace(char c)
-{
-    if (c == '\t' || c == ' ' || c == '\n' || c == '\r')
-        return (1);
-    return (0);
-}
-
-char *clean_str(char *str)
-{
-    size_t idx = 0;
-
-    for (size_t i = 0; str[i]; ++i) {
-        if (!is_whitespace(str[i])) {
-            str[idx++] = str[i];
-        } else if (idx && str[i + 1] && !is_whitespace(str[i + 1])) {
-            str[idx++] = ' ';
-        }
-    }
-    str[idx] = '\0';
-    return (useless_pipe(str));
 }

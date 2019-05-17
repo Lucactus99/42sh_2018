@@ -12,7 +12,8 @@ static void check_manpage(sh_t *sh, int i)
     char pwd[128];
 
     getcwd(pwd, sizeof(pwd));
-    if (strcmp(sh->command[i], "man") == 0 && sh->args[i][1] != NULL && strcmp(sh->args[i][1], "42sh") == 0) {
+    if (strcmp(sh->command[i], "man") == 0 && sh->args[i][1] != NULL &&
+    strcmp(sh->args[i][1], "42sh") == 0) {
         strcat(pwd, "/");
         strcat(pwd, "manpage");
         sh->args[i][1] = strdup(pwd);
@@ -66,29 +67,6 @@ int get_nbr_from_arg(char **args)
     return (nbr);
 }
 
-static void do_exit(char **args)
-{
-    int nbr = get_nbr_from_arg(args);
-
-    if (isatty(0))
-        my_putstr("exit\n");
-    while (1)
-        exit(nbr);
-}
-
-int check_echo(sh_t *sh, int i)
-{
-    if (strcmp(sh->command[i], "echo") == 0) {
-        if (sh->args[i][1] != NULL && strcmp(sh->args[i][1], "$?") == 0) {
-            my_put_nbr(sh->exit_status);
-            sh->exit_status = 0;
-            my_putchar('\n');
-            return (0);
-        }
-    }
-    return (-1);
-}
-
 int find_command(sh_t *sh)
 {
     int ok = 0;
@@ -100,15 +78,10 @@ int find_command(sh_t *sh)
             return (do_alias(sh, i));
         if (strcmp(sh->command[i], "history") == 0)
             return (do_history(sh));
-        if (strcmp(sh->command[i], "exit") == 0) {
-            if (i == sh->nbr_command - 1)
-                do_exit(sh->args[i]);
-            else
-                sh->exit_status = get_nbr_from_arg(sh->args[i]);
-        } else if (strcmp(sh->command[i], "cd") == 0)
+        is_exit(sh, i);
+        if (strcmp(sh->command[i], "cd") == 0)
             return (cd_command(sh, i));
-        else
-            ok = check_echo(sh, i);
+        ok = check_echo(sh, i);
     }
     if (ok == -1)
         sh->exit_status = find_command_2(sh);
