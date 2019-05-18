@@ -7,6 +7,19 @@
 
 #include "my.h"
 
+void free_sh(sh_t *sh)
+{
+    for (int i = 0; i < sh->nbr_command; i++)
+        free(sh->args[i]);
+    free(sh->nbr_args);
+    free(sh->args);
+    free(sh->path);
+    free(sh->command);
+    if (sh->old_pwd != NULL)
+        free(sh->old_pwd);
+    free(sh->redirection_name);
+}
+
 void siginthandling(int sig_num)
 {
     sh_t *sh = NULL;

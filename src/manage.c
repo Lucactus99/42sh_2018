@@ -11,7 +11,7 @@ static void manage_command_fill(sh_t *sh, char *actual)
 {
     if (sh->redirection_name != NULL || sh->redirection == 0) {
         sh->nbr_args = malloc(sizeof(int) * sh->nbr_command);
-        for (int i = 0; sh->command[i]; i++)
+        for (int i = 0; sh->command[i] != NULL; i++)
             sh->nbr_args[i] = get_nbr_args(sh->command[i]);
         sh->args = put_args(sh->command, sh->nbr_command);
         for (int i = 0; sh->command[i]; i++)

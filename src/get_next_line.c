@@ -19,7 +19,7 @@ static int my_strlen(char *str)
     return (i);
 }
 
-static char *strcat(char *str1, char *str2)
+static char *my_strcat(char *str1, char *str2)
 {
     int length1;
     int length2;
@@ -94,6 +94,6 @@ char *get_next_line(int fd)
     if (i != 0 && str[i - 1] == '\n')
         str[i - 1] = '\0';
     else
-        str = strcat(str, get_next_line(fd));
+        str = my_strcat(str, get_next_line(fd));
     return (str);
 }

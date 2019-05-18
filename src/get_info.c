@@ -22,7 +22,7 @@ char **put_path(sh_t *sh, int command)
 
     if (sh->env[0] != NULL && sh->env[0] != 0) {
         j = find_path(sh->env, j);
-        if (sh->env[j + 1] == NULL && strncmp(sh->env[j], "PATH", 4)) {
+        if (sh->env[j + 1] == NULL && strncmp(sh->env[j], "PATH=", 5)) {
             sh->env[j + 1] = malloc(sizeof(char) * 40);
             j++;
         }

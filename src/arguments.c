@@ -9,8 +9,10 @@
 
 static int move_inc(char *av, int i)
 {
+    if (av[i] == '\0')
+        return (i);
     i++;
-    while (av[i] != '"' && av[i] == 39 && av[i] != '\0')
+    while (av[i] != '"' && av[i] != 39 && av[i] != '\0')
         i++;
     return (i);
 }

@@ -30,7 +30,6 @@
 
 typedef struct data
 {
-    char *program_name;
     int *nbr_args;
     char ***args;
     char **path;
@@ -81,6 +80,7 @@ char **add_args(char **, char *);
 int get_nbr_lines(char **);
 int is_builtin(sh_t *sh, int);
 char *useless_pipe(char *);
+void free_sh(sh_t *sh);
 
 // COMMANDS
 int do_command(sh_t *sh);

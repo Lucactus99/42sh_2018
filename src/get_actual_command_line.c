@@ -45,8 +45,9 @@ char *get_actual_command_line(char *str)
     if (str == NULL || str[i] == '\0' || i == 84) {
         i = 0;
         return (NULL);
-    } else
+    } else {
         actual = malloc(sizeof(char) * (strlen(str) + 1));
+    }
     for (; str[i] != '\0' && str[i] != ';'; i++) {
         actual[a] = str[i];
         a++;

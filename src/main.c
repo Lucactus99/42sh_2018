@@ -34,7 +34,8 @@ char *check_binary_op(char *str)
         }
         tmp[a++] = str[i];
     }
-    tmp[a] = str[strlen(str) - 1];
+    tmp[a++] = str[strlen(str) - 1];
+    tmp[a] = '\0';
     return (tmp);
 }
 
@@ -52,6 +53,7 @@ static int main_loop(sh_t *sh)
             manage_user_input(sh, str);
         }
     }
+    free_sh(sh);
     return (sh->exit_status);
 }
 
@@ -80,6 +82,7 @@ int main(int ac, char **av, char **env)
     XSIGNAL(SIGINT, siginthandling);
     sh->exit_status = 0;
     sh->redirection_name = NULL;
+    sh->old_pwd = NULL;
     if (env[0] == 0)
         env = new_path_to_env(env);
     sh->path = get_path(env);

@@ -55,7 +55,7 @@ int setenv_command(sh_t *sh, int command)
         my_putstr_err("contain alphanumeric characters.\n");
         return (1);
     }
-    if (strncmp(sh->args[command][1], "PATH", 4) == 0)
+    if (strncmp(sh->args[command][1], "PATH=", 5) == 0)
         sh->path = modify_path(sh, command);
     else
         sh->env = set_env(sh, command);

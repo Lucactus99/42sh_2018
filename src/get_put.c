@@ -10,10 +10,12 @@
 char **put_old_pwd(char **env, char *pwd)
 {
     int i = 0;
+    int length = 0;
 
     for (; env[i] != NULL; i++) {
-        if (strncmp(env[i], "OLDPWD", 6) == 0) {
-            env[i] = malloc(sizeof(char) * (strlen(pwd) + 7));
+        if (strncmp(env[i], "OLDPWD=", 7) == 0) {
+            length = strlen(pwd) + strlen("OLDPWD=") + 1;
+            env[i] = malloc(sizeof(char) * length);
             env[i] = strcpy(env[i], "OLDPWD=");
             env[i] = strcat(env[i], pwd);
             return (env);
@@ -32,7 +34,7 @@ char *get_old_pwd(char **env)
 
     for (int i = 0; env[i] != 0; i++) {
         if (strncmp(env[i], "OLDPWD=", 7) == 0) {
-            str = malloc(sizeof(char) * strlen(env[i]));
+            str = malloc(sizeof(char) * (strlen(env[i]) + 1));
             str = strcpy(str, env[i]);
         }
     }
@@ -49,7 +51,7 @@ char *get_home(char **env)
 
     for (int i = 0; env[i] != NULL; i++) {
         if (strncmp(env[i], "HOME=", 5) == 0) {
-            str = malloc(sizeof(char) * strlen(env[i]));
+            str = malloc(sizeof(char) * (strlen(env[i]) + 1));
             str = strcpy(str, env[i]);
         }
     }
