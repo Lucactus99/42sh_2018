@@ -76,7 +76,8 @@ int check_alias(sh_t *sh, int i)
         if ((path = get_path_alias(sh, path)) == NULL)
             return (0);
     }
-    if ((fp = fopen(path, "r")) == NULL)
+    if ((fp = fopen(path, "ar+")) == NULL)
         exit(84);
+    fseek(fp, 0, SEEK_SET);
     return (find_alias(fp, sh, i));
 }
