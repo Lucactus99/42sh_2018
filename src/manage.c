@@ -44,7 +44,7 @@ static int manage_command_type(sh_t *sh, char *actual)
 int is_binary_condition_verified(sh_t *sh)
 {
     if (sh->is_binary_op == 0)
-        return (0);
+        return (1);
     if (sh->is_binary_op == 1) {
         if (sh->exit_status == 0)
             return (1);

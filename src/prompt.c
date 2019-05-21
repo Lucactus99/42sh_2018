@@ -15,8 +15,6 @@ void free_sh(sh_t *sh)
     free(sh->args);
     free(sh->path);
     free(sh->command);
-    if (sh->old_pwd != NULL)
-        free(sh->old_pwd);
     free(sh->redirection_name);
 }
 
