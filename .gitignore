@@ -2,3 +2,5 @@
 *.a
 *.o
 42sh
+.history
+.alias
