@@ -61,6 +61,8 @@ void put_in_history(sh_t *sh, int i)
     fp = fopen(path, "a");
     if (fp == NULL)
         exit(84);
+    if (i < 0)
+        return;
     fprintf(fp, "%s\t", time_str);
     fprintf(fp, "%s", sh->command[i]);
     for (int a = 1; sh->args[i][a] != NULL; a++)

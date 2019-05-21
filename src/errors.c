@@ -34,7 +34,7 @@ static void print_error_3(int status)
 {
     if (WTERMSIG(status) == 11) {
         my_putstr_err("Segmentation fault");
-        if (__WCOREDUMP(status) != 0)
+        if (WCOREDUMP(status) != 0)
             my_putstr_err(" (core dumped)\n");
         else
             my_putchar('\n');
@@ -58,14 +58,14 @@ static void print_error_2(int status)
 {
     if (WTERMSIG(status) == 7) {
         my_putstr_err("Bus error");
-        if (__WCOREDUMP(status) != 0)
+        if (WCOREDUMP(status) != 0)
             my_putstr_err(" (core dumped)\n");
         else
             my_putchar('\n');
     }
     if (WTERMSIG(status) == 8) {
         my_putstr_err("Floating exception");
-        if (__WCOREDUMP(status) != 0)
+        if (WCOREDUMP(status) != 0)
             my_putstr_err(" (core dumped)\n");
         else
             my_putchar('\n');
@@ -89,7 +89,7 @@ void print_error(int status)
         my_putstr_err("Trace/BPT trap\n");
     if (WTERMSIG(status) == 6) {
         my_putstr_err("Abort");
-        if (__WCOREDUMP(status) != 0)
+        if (WCOREDUMP(status) != 0)
             my_putstr_err(" (core dumped)\n");
         else
             my_putchar('\n');

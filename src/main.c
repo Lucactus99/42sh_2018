@@ -91,5 +91,6 @@ int main(int ac, char **av, char **env)
         sh->path = get_path(env);
     }
     sh->env = env;
+    put_in_history(sh, -1);
     return (main_loop(sh));
 }
