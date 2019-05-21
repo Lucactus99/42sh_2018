@@ -178,3 +178,12 @@ TESTS=
   echo "ls && ls && ls || ls && ls"
   echo "date || cd toto && ls"
 [917-END]
+
+[918]
+NAME="separator"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "ls -l -a /dev ; echo OK"
+  echo "exit"
+[918-END]
