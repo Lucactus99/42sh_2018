@@ -62,7 +62,7 @@ void manage_redirection(sh_t *sh, char *actual)
             sh->exit_status = 1;
         ambiguous = is_ambiguous(actual);
         check_redirection_errors(sh, ambiguous);
-        if (sh->redirection == 4) {
+        if (sh->redirection == 4 && sh->redirection_name != NULL) {
             sh->redirection_name = do_db_left_redirection(sh->redirection_name);
         }
     }

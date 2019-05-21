@@ -30,7 +30,7 @@ static int manage_command_type(sh_t *sh, char *actual)
         sh->command = malloc(sizeof(char *) * (sh->nbr_command + 1));
         sh->command = get_tab_command(sh, actual);
         manage_redirection(sh, actual);
-        if (sh->redirection == 4) {
+        if (sh->redirection == 4 && sh->redirection_name != NULL) {
             actual = modify_actual_redirection(actual, sh->redirection_name);
             sh->redirection = 0;
             sh->nbr_command = 2;
