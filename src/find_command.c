@@ -77,7 +77,7 @@ int find_command(sh_t *sh)
         if (strcmp(sh->command[i], "alias") == 0)
             return (do_alias(sh, i));
         if (strcmp(sh->command[i], "history") == 0)
-            return (do_history(sh));
+            return (do_history());
         is_exit(sh, i);
         if (strcmp(sh->command[i], "cd") == 0)
             return (cd_command(sh, i));

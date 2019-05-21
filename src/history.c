@@ -7,21 +7,21 @@
 
 #include "my.h"
 
-static char *get_path_history(sh_t *sh, char *path)
+static char *get_path_history(char *path)
 {
-    char *tmp = NULL;
+    char pwd[128];
 
-    tmp = get_home(sh->env);
-    if (tmp == NULL || tmp[0] == '\0')
+    getcwd(pwd, sizeof(pwd));
+    if (pwd == NULL || pwd[0] == '\0')
         return (NULL);
-    path = malloc(sizeof(char) * (strlen(tmp) + strlen("/history") + 1));
-    strcpy(path, tmp);
+    path = malloc(sizeof(char) * (strlen(pwd) + strlen("/.history") + 1));
+    strcpy(path, pwd);
     strcat(path, "/");
-    strcat(path, "history");
+    strcat(path, ".history");
     return (path);
 }
 
-int do_history(sh_t *sh)
+int do_history(void)
 {
     static char *path = NULL;
     FILE *fp = NULL;
@@ -29,7 +29,7 @@ int do_history(sh_t *sh)
     long fsize = 0;
 
     if (path == NULL) {
-        if ((path = get_path_history(sh, path)) == NULL)
+        if ((path = get_path_history(path)) == NULL)
             return (0);
     }
     fp = fopen(path, "r");
@@ -55,7 +55,7 @@ void put_in_history(sh_t *sh, int i)
     time_str[strlen(time_str) - 1] = '\0';
 
     if (path == NULL) {
-        if ((path = get_path_history(sh, path)) == NULL)
+        if ((path = get_path_history(path)) == NULL)
             return;
     }
     fp = fopen(path, "a");

@@ -7,17 +7,17 @@
 
 #include "my.h"
 
-static char *get_path_alias(sh_t *sh, char *path)
+static char *get_path_alias(char *path)
 {
-    char *tmp = NULL;
+    char pwd[128];
 
-    tmp = get_home(sh->env);
-    if (tmp == NULL || tmp[0] == '\0')
+    getcwd(pwd, sizeof(pwd));
+    if (pwd == NULL || pwd[0] == '\0')
         return (NULL);
-    path = malloc(sizeof(char) * (strlen(tmp) + strlen("/alias") + 1));
-    strcpy(path, tmp);
+    path = malloc(sizeof(char) * (strlen(pwd) + strlen("/.alias") + 1));
+    strcpy(path, pwd);
     strcat(path, "/");
-    strcat(path, "alias");
+    strcat(path, ".alias");
     return (path);
 }
 
@@ -73,7 +73,7 @@ int check_alias(sh_t *sh, int i)
     FILE *fp;
 
     if (path == NULL) {
-        if ((path = get_path_alias(sh, path)) == NULL)
+        if ((path = get_path_alias(path)) == NULL)
             return (0);
     }
     if ((fp = fopen(path, "ar+")) == NULL)

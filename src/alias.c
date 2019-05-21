@@ -12,29 +12,36 @@ int check_existing_alias(FILE *fp, char *actual)
     size_t n = 0;
     char *str = NULL;
     ssize_t len = 0;
+    int ok = 0;
 
     fseek(fp, 0, SEEK_SET);
     while ((len = getline(&str, &n, fp)) > 0) {
         str[len - 1] = '\0';
-        if (strcmp(str, actual) == 0) {
+        if (actual == NULL && str != NULL) {
+            my_putstr(str);
+            my_putchar('\n');
+            ok = 1;
+        } else if (strcmp(str, actual) == 0)
             return (1);
-        }
     }
     fseek(fp, 0, SEEK_END);
+    if (ok == 1 || actual == NULL) {
+        return (-1);
+    }
     return (0);
 }
 
-static char *get_path_alias(sh_t *sh, char *path)
+static char *get_path_alias(char *path)
 {
-    char *tmp = NULL;
+    char pwd[128];
 
-    tmp = get_home(sh->env);
-    if (tmp == NULL || tmp[0] == '\0')
+    getcwd(pwd, sizeof(pwd));
+    if (pwd == NULL || pwd[0] == '\0')
         return (NULL);
-    path = malloc(sizeof(char) * (strlen(tmp) + strlen("/alias") + 1));
-    strcpy(path, tmp);
+    path = malloc(sizeof(char) * (strlen(pwd) + strlen("/.alias") + 1));
+    strcpy(path, pwd);
     strcat(path, "/");
-    strcat(path, "alias");
+    strcat(path, ".alias");
     return (path);
 }
 
@@ -57,15 +64,16 @@ int do_alias(sh_t *sh, int i)
     FILE *fp = NULL;
 
     if (path == NULL) {
-        if ((path = get_path_alias(sh, path)) == NULL)
+        if ((path = get_path_alias(path)) == NULL)
             return (0);
     }
     fp = fopen(path, "r+");
     if (fp == NULL)
         exit(84);
-    if (check_existing_alias(fp, sh->args[i][1]) == 0)
+    if (check_existing_alias(fp, sh->args[i][1]) == 0) {
         fprintf(fp, "%s\n", sh->args[i][1]);
-    write_alias(sh, i, fp);
+        write_alias(sh, i, fp);
+    }
     fclose(fp);
     return (0);
 }

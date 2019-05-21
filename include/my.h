@@ -46,7 +46,7 @@ typedef struct data
 
 // HISTORY
 void put_in_history(sh_t *sh, int i);
-int do_history(sh_t *sh);
+int do_history(void);
 
 // ALIAS
 int check_existing_alias(FILE *fp, char *actual);
