@@ -132,5 +132,7 @@ void manage_user_input(sh_t *sh, char *);
 void manage_redirection(sh_t *sh, char *);
 void print_prompt(sh_t *sh);
 void siginthandling(int sig_num);
+char **new_path_to_env(char **env);
+void init_sh(sh_t *sh, char **env);
 
 #endif //MY_H_
