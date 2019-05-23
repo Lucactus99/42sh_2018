@@ -24,6 +24,10 @@ void init_sh(sh_t *sh, char **env)
     sh->exit_status = 0;
     sh->redirection_name = NULL;
     sh->old_pwd = NULL;
+    sh->nbr_args = NULL;
+    sh->not_found = 0;
+    sh->args = NULL;
+    sh->nbr_command = 0;
     if (env[0] == 0)
         env = new_path_to_env(env);
     sh->path = get_path(env);

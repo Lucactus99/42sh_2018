@@ -25,7 +25,7 @@ char *modify_actual_redirection(char *actual, char *redirection)
         return (NULL);
     length = strlen("echo  | ") + strlen(redirection) + strlen(command);
     str = malloc(sizeof(char) * (length + 1));
-    str = strcat(str, "echo ");
+    str = strcpy(str, "echo ");
     str = strcat(str, redirection);
     str = strcat(str, " | ");
     str = strcat(str, command);

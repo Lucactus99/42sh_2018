@@ -50,7 +50,7 @@ static void check_command(sh_t *sh)
             if (errno == 8) {
                 my_putstr_err(sh->command[0]);
                 my_putstr_err(": Exec format error. Wrong Architecture.\n");
-            } else {
+            } else if (errno != 2) {
                 my_putstr_err(sh->command[0]);
                 my_putstr_err(": Permission denied.\n");
             }
@@ -85,6 +85,8 @@ int do_command(sh_t *sh)
         print_error(status);
     }
     status = check_exit(sh);
+    if (sh->not_found == 1)
+        return (1);
     if (status > 0)
         return (status);
     return (sh->exit_status);

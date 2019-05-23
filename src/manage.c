@@ -14,9 +14,9 @@ static void manage_command_fill(sh_t *sh, char *actual)
         for (int i = 0; sh->command[i] != NULL; i++)
             sh->nbr_args[i] = get_nbr_args(sh->command[i]);
         sh->args = put_args(sh->command, sh->nbr_command);
-        for (int i = 0; sh->command[i]; i++)
+        for (int i = 0; sh->command[i] != NULL; i++)
             sh->command[i] = get_program_name(sh->command[i]);
-        for (int i = 0; sh->command[i]; i++)
+        for (int i = 0; sh->command[i] != NULL; i++)
             sh->args[i] = is_globbing(sh->args[i]);
         sh->exit_status = find_command(sh);
         free_command(sh, actual);
@@ -30,7 +30,6 @@ static int manage_command_type(sh_t *sh, char *actual)
         sh->exit_status = 1;
     } else {
         sh->command = malloc(sizeof(char *) * (sh->nbr_command + 1));
-        sh->command = get_tab_command(sh, actual);
         manage_redirection(sh, actual);
         if (sh->redirection == 4 && sh->redirection_name != NULL) {
             actual = modify_actual_redirection(actual, sh->redirection_name);
@@ -38,7 +37,10 @@ static int manage_command_type(sh_t *sh, char *actual)
             sh->nbr_command = 2;
             return (manage_command_type(sh, actual));
         }
-        manage_command_fill(sh, actual);
+        if (sh->redirection_name != NULL || sh->redirection == 0) {
+            sh->command = get_tab_command(sh, actual);
+            manage_command_fill(sh, actual);
+        }
     }
     return (0);
 }

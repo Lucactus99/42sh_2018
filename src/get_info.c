@@ -55,9 +55,9 @@ char **modify_path(sh_t *sh, int command)
     return (sh->path);
 }
 
-static char **my_strdup_2d(char **tab)
+char **my_strdup_2d(char **tab, int lines)
 {
-    char **tmp = malloc(sizeof(char *) * get_nbr_lines(tab));
+    char **tmp = malloc(sizeof(char *) * (get_nbr_lines(tab) + lines));
     int a = 0;
 
     for (int i = 0; tab[i] != NULL; i++)
@@ -71,7 +71,7 @@ static char **my_strdup_2d(char **tab)
 
 char **get_path(char **env)
 {
-    char **tmp_env = my_strdup_2d(env);
+    char **tmp_env = my_strdup_2d(env, 0);
     char **path = NULL;
     int i = 0;
 

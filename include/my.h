@@ -44,6 +44,7 @@ typedef struct data
     char *redirection_name;
     int is_builtin;
     int is_binary_op;
+    int not_found;
 } sh_t;
 
 // HISTORY
@@ -83,6 +84,7 @@ int get_nbr_lines(char **);
 int is_builtin(sh_t *sh, int);
 char *useless_pipe(char *);
 void free_sh(sh_t *sh);
+char **my_strdup_2d(char **tab, int lines);
 
 // COMMANDS
 int do_command(sh_t *sh);
@@ -94,6 +96,7 @@ int count_commands(char *);
 void do_pipe(sh_t *sh, int);
 void do_binary(sh_t *sh, int);
 int get_nbr_from_arg(char **args);
+int check_exit(sh_t *sh);
 
 // ENV
 void print_env(char **);

@@ -9,8 +9,6 @@
 
 void free_sh(sh_t *sh)
 {
-    for (int i = 0; i < sh->nbr_command; i++)
-        free(sh->args[i]);
     free(sh->nbr_args);
     free(sh->args);
     free(sh->path);

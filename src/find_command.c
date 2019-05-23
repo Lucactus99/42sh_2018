@@ -36,7 +36,7 @@ static void find_command_3(sh_t *sh, int i, int *ok)
             ok[0] = 1;
         } else if (is_existing(sh, sh->command[i], NULL) == NULL) {
             sh->exit_status = put_command_not_found(sh, i);
-            ok[0] = 1;
+            sh->not_found = 1;
         } else
             sh->command[i] = is_existing(sh, sh->command[i], NULL);
     }

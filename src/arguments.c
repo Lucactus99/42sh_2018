@@ -33,12 +33,13 @@ int get_nbr_args(char *av)
 char **add_args(char **args, char *argument)
 {
     int i = 0;
+    char **tmp = my_strdup_2d(args, 1);
 
     for (; args[i] != NULL; i++);
-    args[i] = malloc(sizeof(char *) * strlen(argument));
-    args[i] = strcpy(args[i], argument);
-    args[i + 1] = NULL;
-    return (args);
+    tmp[i] = malloc(sizeof(char *) * strlen(argument));
+    tmp[i] = strcpy(tmp[i], argument);
+    tmp[i + 1] = NULL;
+    return (tmp);
 }
 
 char ***put_args(char **av, int nbr_command)

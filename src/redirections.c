@@ -22,7 +22,7 @@ static char *get_redirection_name(char *actual)
         a++;
     }
     str[a] = '\0';
-    if (strlen(str) <= 1) {
+    if (strlen(str) < 1) {
         my_putstr_err("Missing name for redirect.\n");
         return (NULL);
     }
@@ -33,6 +33,7 @@ static char *do_db_left_redirection(char *word)
 {
     char *str = NULL;
     char *tmp = NULL;
+    char *actual = NULL;
 
     do {
         if (str == NULL) {
@@ -40,8 +41,13 @@ static char *do_db_left_redirection(char *word)
                 str = strdup(tmp);
         } else {
             if (tmp != NULL) {
+                actual = strdup(str);
+                free(str);
+                str = malloc(sizeof(char) * (strlen(actual) + strlen(tmp) + 3));
+                str = strcpy(str, actual);
                 str = strcat(str, "\n");
                 str = strcat(str, tmp);
+                free(actual);
             }
         }
         if (isatty(0))

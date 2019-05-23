@@ -22,20 +22,37 @@ static int do_pipe_first(sh_t *sh, int i, int pipes[], int out)
         do_binary(sh, i);
     else {
         if (execve(sh->command[i], sh->args[i], sh->env) < 0) {
-            my_putstr_err(sh->command[0]);
-            my_putstr_err(": Permission denied.\n");
+            if (errno != 2) {
+                my_putstr_err(sh->command[0]);
+                my_putstr_err(": Permission denied.\n");
+            }
         }
     }
     return (out);
 }
 
-static void close_fd_pipes(int out, int pipes[], int fd_in)
+static int close_fd_pipes(int out, int pipes[], int fd_in, sh_t *sh)
 {
+    int status;
+
     close(out);
     close(pipes[0]);
     close(fd_in);
-    for (int i = 0; i < 2; i++)
-        wait(NULL);
+    for (int i = 0; i < sh->nbr_command; i++) {
+        if (wait(&status) < 0)
+            exit(84);
+    }
+    sh->exit_status = WEXITSTATUS(status);
+    if (WIFSIGNALED(status) == 1) {
+        sh->exit_status = status;
+        print_error(status);
+    }
+    status = check_exit(sh);
+    if (sh->not_found == 1)
+        return (1);
+    if (status > 0)
+        return (status);
+    return (sh->exit_status);
 }
 
 void do_pipe(sh_t *sh, int i)
@@ -53,8 +70,8 @@ void do_pipe(sh_t *sh, int i)
         close(pipes[1]);
         fd_in = pipes[0];
         if (sh->command[i + 1] == NULL) {
-            close_fd_pipes(out, pipes, fd_in);
-            exit(0);
+            sh->exit_status = close_fd_pipes(out, pipes, fd_in, sh);
+            exit(sh->exit_status);
         }
     }
 }
