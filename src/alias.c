@@ -45,7 +45,7 @@ static char *get_path_alias(char *path)
     return (path);
 }
 
-static void write_alias(sh_t *sh, int i, FILE *fp)
+static void write_alias(sh_t *sh, int i, FILE *fp, size_t value)
 {
     for (int a = 2; sh->args[i][a] != NULL; a++) {
         for (int j = 0; sh->args[i][a][j] != '\0'; j++) {
@@ -55,13 +55,16 @@ static void write_alias(sh_t *sh, int i, FILE *fp)
         if (sh->args[i][a + 1] != NULL)
             fwrite(" ", sizeof(char), 1, fp);
     }
-    fwrite("\n\n", sizeof(char), 2, fp);
+    if (value == 0)
+        fwrite("\n", sizeof(char), 1, fp);
+    fwrite("\n", sizeof(char), 1, fp);
 }
 
 int do_alias(sh_t *sh, int i)
 {
     static char *path = NULL;
     FILE *fp = NULL;
+    int value = 0;
 
     if (path == NULL) {
         if ((path = get_path_alias(path)) == NULL)
@@ -70,10 +73,16 @@ int do_alias(sh_t *sh, int i)
     fp = fopen(path, "r+");
     if (fp == NULL)
         exit(84);
-    if (check_existing_alias(fp, sh->args[i][1]) == 0) {
+    if (sh->args[i][1] != NULL && sh->args[i][2] == NULL) {
+        sh->args[i][1] = NULL;
+        sh->nbr_args[i] = 0;
+        value = -1;
+    } else
+        value = check_existing_alias(fp, sh->args[i][1]);
+    if (value == 0)
         fprintf(fp, "%s\n", sh->args[i][1]);
-        write_alias(sh, i, fp);
-    }
+    if (value != -1)
+        write_alias(sh, i, fp, value);
     fclose(fp);
     return (0);
 }
