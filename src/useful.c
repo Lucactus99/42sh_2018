@@ -63,7 +63,7 @@ char *is_existing(sh_t *sh, char *actual, char *diff)
         return (tmp);
     }
     for (int i = 0; sh->path[i] != NULL && sh->path[i][0] != 0; i++) {
-        tmp = malloc(sizeof(char) * 40);
+        tmp = malloc(sizeof(char) * 100);
         tmp = strcpy(tmp, sh->path[i]);
         tmp = strcat(tmp, "/");
         tmp = strcat(tmp, actual);

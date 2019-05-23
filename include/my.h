@@ -25,6 +25,8 @@
 #include <time.h>
 #include <termios.h>
 #include <ctype.h>
+#include <strings.h>
+#include <glob.h>
 
 #define XSIGNAL(n, h)	if (signal(n, h) == SIG_ERR) return (-1)
 
@@ -134,5 +136,8 @@ void print_prompt(sh_t *sh);
 void siginthandling(int sig_num);
 char **new_path_to_env(char **env);
 void init_sh(sh_t *sh, char **env);
+
+// GLOB
+char **is_globbing(char **args);
 
 #endif //MY_H_
