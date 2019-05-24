@@ -29,7 +29,7 @@ char **is_globbing(char **args)
     glob(args[1], GLOB_DOOFFS, NULL, &globbuff);
     for (int i = 2; args[i] != NULL; i++) {
         if (args[i] == NULL)
-        return (args);
+            return (args);
         if (count_nb_glob(args[i]) == 0)
             return (args);
         globbuff.gl_offs = 0;
