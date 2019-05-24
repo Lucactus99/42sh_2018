@@ -9,11 +9,15 @@
 
 static int do_pipe_first(sh_t *sh, int i, int pipes[], int out)
 {
-    if (sh->command[i + 1] != NULL)
-        dup2(pipes[1], 1);
+    if (sh->command[i + 1] != NULL) {
+        if (dup2(pipes[1], 1) < 0)
+            exit(84);
+    }
     else {
-        if (sh->redirection != 0)
-            dup2(out, 1);
+        if (sh->redirection != 0) {
+            if (dup2(out, 1) < 0)
+                exit(84);
+        }
     }
     close(pipes[0]);
     if (is_builtin(sh, i) == 1)
@@ -27,6 +31,7 @@ static int do_pipe_first(sh_t *sh, int i, int pipes[], int out)
                 my_putstr_err(": Permission denied.\n");
             }
         }
+        exit(0);
     }
     return (out);
 }
@@ -63,7 +68,8 @@ void do_pipe(sh_t *sh, int i)
 
     pipe(pipes);
     if (fork() == 0) {
-        dup2(fd_in, 0);
+        if (dup2(fd_in, 0) < 0)
+            exit(84);
         out = do_pipe_first(sh, i, pipes, out);
         exit(0);
     } else {
