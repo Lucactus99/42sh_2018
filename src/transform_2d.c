@@ -29,6 +29,23 @@ static int is_quote(int quote, int i, char *str)
     return (quote);
 }
 
+char **remove_quote(char **tab)
+{
+    for (int i = 0; tab[i] != NULL; i++) {
+        for (int j = 0; tab[i][j] != '\0'; j++) {
+            if (tab[i][j] == '"') {
+                while (tab[i][j] != '\0') {
+                    tab[i][j] = tab[i][j + 1];
+                    j++;
+                }
+                tab[i][j] = '\0';
+                return (remove_quote(tab));
+            }
+        }
+    }
+    return (tab);
+}
+
 char **transform_2d(char *str, char sep)
 {
     char **str_2d = malloc(sizeof(char *) * (count_lines(str, sep) + 2));
@@ -38,16 +55,6 @@ char **transform_2d(char *str, char sep)
     int quote = 0;
 
     for (; str[i] != '\0'; i++) {
-        if (i - 1 > 0) {
-            if (str[i - 1] == 92) {
-                if (str[i] == ' ')
-                    quote = 1;
-                while (str[i - 1] != '\0') {
-                    str[i - 1] = str[i];
-                    i++;
-                }
-            }
-        }
         if (str[i] == sep && quote == 0) {
             str[i++] = '\0';
             str_2d[j] = &str[k];
@@ -60,5 +67,5 @@ char **transform_2d(char *str, char sep)
     str_2d[j] = &str[k];
     j++;
     str_2d[j] = NULL;
-    return (str_2d);
+    return (remove_quote(str_2d));
 }
