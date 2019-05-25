@@ -29,6 +29,15 @@
 #include <glob.h>
 
 #define XSIGNAL(n, h)	if (signal(n, h) == SIG_ERR) return (-1)
+#define KEY_ESCAPE 0x001b
+#define KEY_ENTER 0x000a
+#define KEY_UP 0x0105
+#define KEY_DOWN 0x0106
+#define KEY_LEFT 0x0107
+#define KEY_RIGHT 0x0108
+#define KEY_CLEAR 12
+#define KEY_BACK 0x007f
+#define KEY_TAB 0x0009
 
 typedef struct data
 {
@@ -138,5 +147,17 @@ void print_prompt(sh_t *sh);
 void siginthandling(int sig_num);
 char **new_path_to_env(char **env);
 void init_sh(sh_t *sh, char **env);
+char *get_line(sh_t *sh);
+
+// AUTOCOMPLETION
+DIR *open_good_directory(DIR *dir, char *tmp);
+int check_number_of_occurence(char *tmp);
+int check_number_of_occurence_path(char *tmp, char **path);
+char *display_and_concat(DIR *dir, int occurence, char *tmp, char *str);
+char *display_and_concat_path(DIR *dir, int occurence, char *str);
+int check_str(char *str);
+char *get_name(char *tmp);
+char *get_good_directory(char *tmp);
+char *find_autocompletion_system(sh_t *sh, char *str);
 
 #endif //MY_H_

@@ -11,20 +11,22 @@ NAME		:= 42sh
 
 ##=====================================FILES===========================================##
 
-BASICS		:= $(wildcard src/*.c)
-ALIAS		:= $(wildcard src/alias/*.c)
-BUILTINS 	:= $(wildcard src/builtins/*.c)
-CHECK_ERRORS:= $(wildcard src/check_errors/*.c)
-COMMANDS	:= $(wildcard src/commands/*.c)
-ENV			:= $(wildcard src/env/*.c)
-HISTORY		:= $(wildcard src/history/*.c)
-INIT_SH		:= $(wildcard src/init_sh/*.c)
-INPUT		:= $(wildcard src/input/*.c)
-REDIRECTIONS:= $(wildcard src/redirections/*.c)
-UTILS		:= $(wildcard src/utils/*.c)
+ALIAS			:= $(wildcard src/alias/*.c)
+AUTOCOMPLETION	:= $(wildcard src/autocompletion/*.c)
+BASICS			:= $(wildcard src/*.c)
+BUILTINS 		:= $(wildcard src/builtins/*.c)
+CHECK_ERRORS	:= $(wildcard src/check_errors/*.c)
+COMMANDS		:= $(wildcard src/commands/*.c)
+ENV				:= $(wildcard src/env/*.c)
+HISTORY			:= $(wildcard src/history/*.c)
+INIT_SH			:= $(wildcard src/init_sh/*.c)
+INPUT			:= $(wildcard src/input/*.c)
+TERMINAL		:= $(wildcard src/terminal/*.c)
+REDIRECTIONS	:= $(wildcard src/redirections/*.c)
+UTILS			:= $(wildcard src/utils/*.c)
 
-SRC		:= $(BASICS) $(ALIAS) $(BUILTINS) $(CHECK_ERRORS) $(COMMANDS) $(ENV) $(HISTORY) $(INIT_SH) $(INPUT) \
-			$(REDIRECTIONS) $(UTILS)
+SRC		:= $(BASICS) $(ALIAS) $(AUTOCOMPLETION) $(BUILTINS) $(CHECK_ERRORS) $(COMMANDS) $(ENV) $(HISTORY) $(INIT_SH) $(INPUT) \
+			$(REDIRECTIONS) $(UTILS) $(TERMINAL)
 
 CINC		:= -I include/
 CFLAGS		:= -W -Wall -Wextra -pedantic -g
@@ -64,6 +66,7 @@ re:	fclean all
 createdir:
 	@mkdir -p obj
 	@mkdir -p obj/alias
+	@mkdir -p obj/autocompletion
 	@mkdir -p obj/builtins
 	@mkdir -p obj/check_errors
 	@mkdir -p obj/commands
@@ -71,5 +74,6 @@ createdir:
 	@mkdir -p obj/history
 	@mkdir -p obj/init_sh
 	@mkdir -p obj/input
+	@mkdir -p obj/terminal
 	@mkdir -p obj/redirections
 	@mkdir -p obj/utils

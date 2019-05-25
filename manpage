@@ -2,7 +2,7 @@
 .SH NAME
 42sh \- C shell with command execution handling
 .SH SYNOPSIS
-.B 42sh \fR[\fB\-h\fR]
+.B 42sh \fR[\fB\-h\fR] [\fB\-b\fR]
 .br
 .SH DESCRIPTION
 \fI42sh\fR is an enhanced but completely compatible version of the Berkeley
@@ -25,16 +25,28 @@ but not usually documented are labeled with '(u)'.
 .SH BUILTINS
 .PD 0
 .TP 4
-\fBSETENV\fR    - change or add an environment variable
+\fBSETENV\fR            - change or add an environment variable
 .TP 4
-\fBUNSETENV\fR  - delete an environment variable
+\fBUNSETENV\fR          - delete an environment variable
 .TP 4
-\fBCD\fR        - change working directory
+\fBCD\fR                - change working directory
 .TP 4
-\fBECHO\fR      - display a line of text
+\fBECHO\fR              - display a line of text
 .TP 4
-\fBEXIT\fR      - cause normal process termination
+\fBEXIT\fR              - cause normal process termination
+.TP 4
+\fBWHERE - WHICH\fR     - locate a command
+.TP 4
+\fBALIAS\fR             - replace a command line by a name
+.SH ARGUMENTS
+.PD 0
+.TP 4
+\fB-h\fR    - display man
+.TP 4
+\fB-b\fR    - launch 42sh with autocompletion & non blocking read
 .SH VERSION
+.PD 0
+.TP 2
 This manual documents 42sh 1.00.00 (Astron) 2019-05-26.
 .SH AUTHORS
 .PD 0
