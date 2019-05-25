@@ -7,36 +7,17 @@
 
 #include "my.h"
 
-int is_binary_operation(char *actual)
+static char *get_str(sh_t *sh, int mode, char *str)
 {
-    for (int i = 0; actual[i + 1] != '\0'; i++) {
-        if (actual[i] == '&' && actual[i + 1] == '&')
-            return (1);
-        if (actual[i] == '|' && actual[i + 1] == '|')
-            return (2);
-    }
-    return (0);
-}
-
-char *check_binary_op(char *str)
-{
-    char *tmp = malloc(sizeof(char) * (strlen(str) + 1));
-    int a = 0;
-
-    for (int i = 0; str[i + 1] != '\0'; i++) {
-        if (str[i] == '&' && str[i + 1] == '&') {
-            tmp[a++] = ';';
-            i += 2;
-        }
-        if (str[i] == '|' && str[i + 1] == '|') {
-            tmp[a++] = ';';
-            i += 2;
-        }
-        tmp[a++] = str[i];
-    }
-    tmp[a++] = str[strlen(str) - 1];
-    tmp[a] = '\0';
-    return (tmp);
+    if (mode >= 0)
+        print_prompt(sh);
+    if (mode == 0)
+        str = get_next_line(0);
+    else if (mode == 1)
+        str = get_line(sh);
+    else
+        str = "man 42sh";
+    return (str);
 }
 
 static int main_loop(sh_t *sh, int mode)
@@ -44,13 +25,7 @@ static int main_loop(sh_t *sh, int mode)
     char *str = "lucas";
 
     while (str != NULL && strcmp(str, "exit") != 0) {
-        print_prompt(sh);
-        if (mode == 0)
-            str = get_next_line(0);
-        else if (mode == 1)
-            str = get_line(sh);
-        else
-            str = "man 42sh";
+        str = get_str(sh, mode, str);
         sh->not_found = 0;
         if (str != NULL && str[0] != 0) {
             sh->is_binary_op = is_binary_operation(str);
@@ -58,6 +33,8 @@ static int main_loop(sh_t *sh, int mode)
                 str = check_binary_op(str);
             manage_user_input(sh, str);
         }
+        if (mode < 0)
+            return (0);
     }
     free_sh(sh);
     return (sh->exit_status);

@@ -288,8 +288,10 @@ char *handle_key_down(char *str, size_t *pos)
         cursorbackward(pos);
     }
     tmp = call_history(2);
-    if (tmp == NULL)
+    if (tmp == NULL) {
+        bzero(str, 1000);
         return (str);
+    }
     bzero(str, 1000);
     strcat(str, tmp);
     if (str[0] != '\0') {

@@ -93,6 +93,8 @@ int is_builtin(sh_t *sh, int);
 char *useless_pipe(char *);
 void free_sh(sh_t *sh);
 char **my_strdup_2d(char **tab, int lines);
+int is_binary_operation(char *actual);
+char *check_binary_op(char *str);
 
 // COMMANDS
 int do_command(sh_t *sh);
