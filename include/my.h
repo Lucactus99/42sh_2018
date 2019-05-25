@@ -169,5 +169,6 @@ char *handle_key_down(char *str, size_t *pos);
 char *handle_key_up(char *str, size_t *pos);
 void my_reset(size_t *pos, char **str);
 char *handle_key_back(char *str, size_t *pos);
+void clean_terminal(size_t *pos, size_t actual_pos);
 
 #endif //MY_H_

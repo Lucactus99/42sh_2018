@@ -79,16 +79,7 @@ char *handle_key_up(char *str, size_t *pos)
         cursorforward(pos);
     }
     actual_pos = pos[0];
-    while (pos[0] > 0) {
-        cursorbackward(pos);
-    }
-    for (size_t i = 0; i < actual_pos; i++) {
-        putchar(' ');
-        pos[0]++;
-    }
-    while (pos[0] > 0) {
-        cursorbackward(pos);
-    }
+    clean_terminal(pos, actual_pos);
     tmp = call_history(1);
     if (tmp == NULL) {
         bzero(str, 1000);
@@ -113,16 +104,7 @@ char *handle_key_down(char *str, size_t *pos)
         cursorforward(pos);
     }
     actual_pos = pos[0];
-    while (pos[0] > 0) {
-        cursorbackward(pos);
-    }
-    for (size_t i = 0; i < actual_pos; i++) {
-        putchar(' ');
-        pos[0]++;
-    }
-    while (pos[0] > 0) {
-        cursorbackward(pos);
-    }
+   clean_terminal(pos, actual_pos);
     tmp = call_history(2);
     if (tmp == NULL) {
         bzero(str, 1000);

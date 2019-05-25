@@ -40,16 +40,7 @@ char *cursor_delete(size_t *pos, char *str)
     if (pos[0] > 0) {
         cursorbackward(pos);
         str = modified_str_delete(pos[0], str);
-        while (pos[0] > 0) {
-            cursorbackward(pos);
-        }
-        for (int i = 0; i < actual_pos; i++) {
-            putchar(' ');
-            pos[0]++;
-        }
-        while (pos[0] > 0) {
-            cursorbackward(pos);
-        }
+        clean_terminal(pos, actual_pos);
     }
     pos[0] = tmp;
     return (str);

@@ -101,6 +101,20 @@ void my_reset(size_t *pos, char **str)
     bzero(str[0], 1000);
 }
 
+void clean_terminal(size_t *pos, size_t actual_pos)
+{
+    while (pos[0] > 0) {
+        cursorbackward(pos);
+    }
+    for (size_t i = 0; i < actual_pos; i++) {
+        putchar(' ');
+        pos[0]++;
+    }
+    while (pos[0] > 0) {
+        cursorbackward(pos);
+    }
+}
+
 char *handle_key_tab(char *str, size_t *pos, sh_t *sh)
 {
     if (str != NULL && str[0] != '\0' && str[0] != ' ') {
