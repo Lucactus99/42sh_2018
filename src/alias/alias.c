@@ -7,7 +7,7 @@
 
 #include "my.h"
 
-int check_existing_alias(FILE *fp, char *actual)
+static int check_existing_alias(FILE *fp, char *actual)
 {
     size_t n = 0;
     char *str = NULL;
@@ -60,6 +60,16 @@ static void write_alias(sh_t *sh, int i, FILE *fp, size_t value)
     fwrite("\n", sizeof(char), 1, fp);
 }
 
+static int check_error_alias(sh_t *sh, int i, FILE *fp)
+{
+    if (sh->args[i][1] != NULL && sh->args[i][2] == NULL) {
+        sh->args[i][1] = NULL;
+        sh->nbr_args[i] = 0;
+        return (-1);
+    }
+    return (check_existing_alias(fp, sh->args[i][1]));
+}
+
 int do_alias(sh_t *sh, int i)
 {
     static char *path = NULL;
@@ -73,12 +83,7 @@ int do_alias(sh_t *sh, int i)
     fp = fopen(path, "r+");
     if (fp == NULL)
         exit(84);
-    if (sh->args[i][1] != NULL && sh->args[i][2] == NULL) {
-        sh->args[i][1] = NULL;
-        sh->nbr_args[i] = 0;
-        value = -1;
-    } else
-        value = check_existing_alias(fp, sh->args[i][1]);
+    value = check_error_alias(sh, i, fp);
     if (value == 0)
         fprintf(fp, "%s\n", sh->args[i][1]);
     if (value != -1)

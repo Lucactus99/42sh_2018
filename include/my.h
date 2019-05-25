@@ -52,7 +52,6 @@ void put_in_history(sh_t *sh, int i);
 int do_history(void);
 
 // ALIAS
-int check_existing_alias(FILE *fp, char *actual);
 int check_alias(sh_t *sh, int i);
 int do_alias(sh_t *sh, int i);
 
@@ -139,8 +138,5 @@ void print_prompt(sh_t *sh);
 void siginthandling(int sig_num);
 char **new_path_to_env(char **env);
 void init_sh(sh_t *sh, char **env);
-
-// GLOB
-char **is_globbing(char **args);
 
 #endif //MY_H_

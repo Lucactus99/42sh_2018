@@ -46,6 +46,7 @@ static int main_loop(sh_t *sh)
     while (str != NULL && strcmp(str, "exit") != 0) {
         print_prompt(sh);
         str = get_next_line(0);
+        sh->not_found = 0;
         if (str != NULL && str[0] != 0) {
             sh->is_binary_op = is_binary_operation(str);
             if (sh->is_binary_op > 0)

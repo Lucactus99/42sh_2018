@@ -16,8 +16,6 @@ static void manage_command_fill(sh_t *sh, char *actual)
         sh->args = put_args(sh->command, sh->nbr_command);
         for (int i = 0; sh->command[i] != NULL; i++)
             sh->command[i] = get_program_name(sh->command[i]);
-        for (int i = 0; sh->command[i] != NULL; i++)
-            sh->args[i] = is_globbing(sh->args[i]);
         sh->exit_status = find_command(sh);
         free_command(sh, actual);
     }

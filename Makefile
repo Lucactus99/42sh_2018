@@ -17,14 +17,13 @@ BUILTINS 	:= $(wildcard src/builtins/*.c)
 CHECK_ERRORS:= $(wildcard src/check_errors/*.c)
 COMMANDS	:= $(wildcard src/commands/*.c)
 ENV			:= $(wildcard src/env/*.c)
-GLOBBING	:= $(wildcard src/globbing/*.c)
 HISTORY		:= $(wildcard src/history/*.c)
 INIT_SH		:= $(wildcard src/init_sh/*.c)
 INPUT		:= $(wildcard src/input/*.c)
 REDIRECTIONS:= $(wildcard src/redirections/*.c)
 UTILS		:= $(wildcard src/utils/*.c)
 
-SRC		:= $(BASICS) $(ALIAS) $(BUILTINS) $(CHECK_ERRORS) $(COMMANDS) $(ENV) $(GLOBBING) $(HISTORY) $(INIT_SH) $(INPUT) \
+SRC		:= $(BASICS) $(ALIAS) $(BUILTINS) $(CHECK_ERRORS) $(COMMANDS) $(ENV) $(HISTORY) $(INIT_SH) $(INPUT) \
 			$(REDIRECTIONS) $(UTILS)
 
 CINC		:= -I include/
@@ -69,7 +68,6 @@ createdir:
 	@mkdir -p obj/check_errors
 	@mkdir -p obj/commands
 	@mkdir -p obj/env
-	@mkdir -p obj/globbing
 	@mkdir -p obj/history
 	@mkdir -p obj/init_sh
 	@mkdir -p obj/input

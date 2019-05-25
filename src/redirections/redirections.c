@@ -29,26 +29,33 @@ static char *get_redirection_name(char *actual)
     return (str);
 }
 
+static char *get_new_str(char *tmp, char *str)
+{
+    char *actual = NULL;
+
+    if (tmp != NULL) {
+        actual = strdup(str);
+        free(str);
+        str = malloc(sizeof(char) * (strlen(actual) + strlen(tmp) + 3));
+        str = strcpy(str, actual);
+        str = strcat(str, "\n");
+        str = strcat(str, tmp);
+        free(actual);
+    }
+    return (str);
+}
+
 static char *do_db_left_redirection(char *word)
 {
     char *str = NULL;
     char *tmp = NULL;
-    char *actual = NULL;
 
     do {
         if (str == NULL) {
             if (tmp != NULL)
                 str = strdup(tmp);
         } else {
-            if (tmp != NULL) {
-                actual = strdup(str);
-                free(str);
-                str = malloc(sizeof(char) * (strlen(actual) + strlen(tmp) + 3));
-                str = strcpy(str, actual);
-                str = strcat(str, "\n");
-                str = strcat(str, tmp);
-                free(actual);
-            }
+            str = get_new_str(tmp, str);
         }
         if (isatty(0))
             my_putstr("? ");

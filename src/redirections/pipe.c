@@ -7,6 +7,25 @@
 
 #include "my.h"
 
+void do_binary(sh_t *sh, int command)
+{
+    sh->command[command] += 2;
+    if (execve(sh->command[command], sh->args[command], sh->env) <= 0) {
+        my_putstr_err("./");
+        my_putstr_err(sh->command[command]);
+        my_putstr_err(": Exec format error. Wrong Architecture.\n");
+    }
+    exit(0);
+}
+
+void check_binary(sh_t *sh)
+{
+    for (int i = 0; i < sh->nbr_command; i++) {
+        if (strncmp(sh->command[i], "./", 2) == 0)
+            do_binary(sh, i);
+    }
+}
+
 char *modify_actual_redirection(char *actual, char *redirection)
 {
     char *str = NULL;
