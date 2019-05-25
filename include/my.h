@@ -162,4 +162,12 @@ char *get_name(char *tmp);
 char *get_good_directory(char *tmp);
 char *find_autocompletion_system(sh_t *sh, char *str);
 
+// TERMINAL
+void cursorbackward(size_t *pos);
+void cursorforward(size_t *pos);
+char *handle_key_down(char *str, size_t *pos);
+char *handle_key_up(char *str, size_t *pos);
+void my_reset(size_t *pos, char **str);
+char *handle_key_back(char *str, size_t *pos);
+
 #endif //MY_H_
