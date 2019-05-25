@@ -47,8 +47,7 @@ char *modify_actual_redirection(char *actual, char *redirection)
     str = strcpy(str, "echo ");
     str = strcat(str, redirection);
     str = strcat(str, " | ");
-    str = strcat(str, command);
-    return (str);
+    return (strcat(str, command));
 }
 
 static int check_pipe(char c, int redirection, int *pipe)

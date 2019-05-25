@@ -55,13 +55,8 @@ char *is_existing(sh_t *sh, char *actual, char *diff)
 {
     char *tmp = NULL;
 
-    if (strcmp("setenv", actual) == 0)
+    if (strcmp("setenv", actual) == 0 || access(actual, F_OK) == 0)
         return (actual);
-    if (access(actual, F_OK) == 0) {
-        tmp = malloc(sizeof(char) * strlen(actual) + 1);
-        tmp = strcpy(tmp, actual);
-        return (tmp);
-    }
     for (int i = 0; sh->path[i] != NULL && sh->path[i][0] != 0; i++) {
         tmp = malloc(sizeof(char) * 100);
         tmp = strcpy(tmp, sh->path[i]);

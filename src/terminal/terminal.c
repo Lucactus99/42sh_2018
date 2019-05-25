@@ -42,6 +42,35 @@ static int special_key(char **str, int c, size_t *pos)
     return (0);
 }
 
+static char *do_key(int c, char *str, size_t *pos, sh_t *sh)
+{
+    if (c == KEY_TAB)
+        return (handle_key_tab(str, pos, sh));
+    if (c == KEY_BACK)
+        return (handle_key_back(str, pos));
+    if (c == KEY_UP)
+        return (handle_key_history(str, pos, 1));
+    if (c == KEY_DOWN)
+        return (handle_key_history(str, pos, 2));
+    putchar(c);
+    str[pos[0]++] = c;
+    return (str);
+}
+
+static char *do_cursor(int c, size_t *pos, char *str, sh_t *sh)
+{
+    if (c == KEY_LEFT) {
+        if (pos[0] > 0) {
+            cursorbackward(pos);
+        }
+    } else if (c == KEY_RIGHT) {
+        if (pos[0] < strlen(str))
+            cursorforward(pos);
+    } else
+        str = do_key(c, str, pos, sh);
+    return (str);
+}
+
 char *get_line(sh_t *sh)
 {
     int c;
@@ -55,38 +84,11 @@ char *get_line(sh_t *sh)
             exit(84);
     }
     bzero(str, 1000);
-    while (1) {
+    while (pos < 1000) {
         c = kbget(term, oterm);
         if (special_key(&str, c, &pos) == 1)
             return (str);
-        switch (c) {
-        case KEY_BACK:
-            str = handle_key_back(str, &pos);
-            break;
-        case KEY_UP:
-            str = handle_key_history(str, &pos, 1);
-            break;
-        case KEY_DOWN:
-            str = handle_key_history(str, &pos, 2);
-            break;
-        case KEY_RIGHT:
-            if (pos < strlen(str))
-                cursorforward(&pos);
-            break;
-        case KEY_LEFT:
-            if (pos > 0)
-                cursorbackward(&pos);
-            break;
-        case KEY_TAB:
-            str = handle_key_tab(str, &pos, sh);
-            break;
-        default:
-            putchar(c);
-            str[pos++] = c;
-            break;
-        }
-        if (pos >= 1000)
-            exit(84);
+        str = do_cursor(c, &pos, str, sh);
     }
     printf("\n");
     return (str);

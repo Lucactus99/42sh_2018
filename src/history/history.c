@@ -32,8 +32,7 @@ int do_history(void)
         if ((path = get_path_history(path)) == NULL)
             return (0);
     }
-    fp = fopen(path, "r");
-    if (fp == NULL)
+    if ((fp = fopen(path, "r")) == NULL)
         exit(84);
     fseek(fp, 0, SEEK_END);
     fsize = ftell(fp);
@@ -58,8 +57,7 @@ void put_in_history(sh_t *sh, int i)
         if ((path = get_path_history(path)) == NULL)
             return;
     }
-    fp = fopen(path, "a");
-    if (fp == NULL)
+    if ((fp = fopen(path, "a")) == NULL)
         exit(84);
     if (i < 0)
         return;
