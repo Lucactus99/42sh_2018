@@ -7,114 +7,6 @@
 
 #include "my.h"
 
-static struct termios term, oterm;
-
-void cursorforward(size_t *pos)
-{
-    printf("\033[C");
-    pos[0]++;
-}
-
-void cursorbackward(size_t *pos)
-{
-    printf("\033[D");
-    pos[0]--;
-}
-
-static int getch(void)
-{
-    int c = 0;
-
-    tcgetattr(0, &oterm);
-    memcpy(&term, &oterm, sizeof(term));
-    term.c_lflag &= ~(ICANON | ECHO);
-    term.c_cc[VMIN] = 1;
-    term.c_cc[VTIME] = 0;
-    tcsetattr(0, TCSANOW, &term);
-    c = getchar();
-    tcsetattr(0, TCSANOW, &oterm);
-    return c;
-}
-
-static int kbhit(void)
-{
-    int c = 0;
-
-    tcgetattr(0, &oterm);
-    memcpy(&term, &oterm, sizeof(term));
-    term.c_lflag &= ~(ICANON | ECHO);
-    term.c_cc[VMIN] = 0;
-    term.c_cc[VTIME] = 1;
-    tcsetattr(0, TCSANOW, &term);
-    c = getchar();
-    tcsetattr(0, TCSANOW, &oterm);
-    if (c != -1)
-        ungetc(c, stdin);
-    return ((c != -1) ? 1 : 0);
-}
-
-static int kbesc(void)
-{
-    int c;
-
-    if (!kbhit())
-        return KEY_ESCAPE;
-    c = getch();
-    if (c == '[') {
-        switch (getch()) {
-        case 'A':
-            c = KEY_UP;
-            break;
-        case 'B':
-            c = KEY_DOWN;
-            break;
-        case 'D':
-            c = KEY_LEFT;
-            break;
-        case 'C':
-            c = KEY_RIGHT;
-            break;
-        default:
-            c = 0;
-            break;
-        }
-    } else {
-        c = 0;
-    }
-    if (c == 0)
-        while (kbhit())
-            getch();
-    return c;
-}
-
-static int kbget(void)
-{
-    int c;
-
-    c = getch();
-    return (c == KEY_ESCAPE) ? kbesc() : c;
-}
-
-void my_reset(size_t *pos, char **str)
-{
-    pos[0] = 0;
-    bzero(str[0], 1000);
-}
-
-void clean_terminal(size_t *pos, size_t actual_pos)
-{
-    while (pos[0] > 0) {
-        cursorbackward(pos);
-    }
-    for (size_t i = 0; i < actual_pos; i++) {
-        putchar(' ');
-        pos[0]++;
-    }
-    while (pos[0] > 0) {
-        cursorbackward(pos);
-    }
-}
-
 char *handle_key_tab(char *str, size_t *pos, sh_t *sh)
 {
     if (str != NULL && str[0] != '\0' && str[0] != ' ') {
@@ -132,11 +24,31 @@ char *handle_key_tab(char *str, size_t *pos, sh_t *sh)
     return (str);
 }
 
+static int special_key(char **str, int c, size_t *pos)
+{
+    if (c == KEY_CLEAR) {
+        str[0] = strcpy(str[0], "clear");
+        return (1);
+    }
+    if (c == KEY_ENTER) {
+        pos[0] = 0;
+        printf("\n");
+        return (1);
+    }
+    if (c == KEY_ESCAPE) {
+        str[0] = NULL;
+        return (1);
+    }
+    return (0);
+}
+
 char *get_line(sh_t *sh)
 {
     int c;
     static char *str = NULL;
     static size_t pos = 0;
+    static struct termios term;
+    static struct termios oterm;
 
     if (str == NULL) {
         if ((str = malloc(sizeof(char) * 1000)) == NULL)
@@ -144,39 +56,34 @@ char *get_line(sh_t *sh)
     }
     bzero(str, 1000);
     while (1) {
-        c = kbget();
-        if (c == KEY_CLEAR)
-            return ("clear");
-        if (c == KEY_BACK) {
-            str = handle_key_back(str, &pos);
-        } else if (c == KEY_UP) {
-            str = handle_key_up(str, &pos);
-            if (str == NULL)
-                return (NULL);
-        } else if (c == KEY_DOWN) {
-            str = handle_key_down(str, &pos);
-            if (str == NULL)
-                return (NULL);
-        } else if (c == KEY_ENTER) {
-            pos = 0;
-            printf("\n");
+        c = kbget(term, oterm);
+        if (special_key(&str, c, &pos) == 1)
             return (str);
-        }
-        else if (c == KEY_ESCAPE)
-            return (NULL);
-        else if (c == KEY_RIGHT) {
-            if (pos < strlen(str)) {
+        switch (c) {
+        case KEY_BACK:
+            str = handle_key_back(str, &pos);
+            break;
+        case KEY_UP:
+            str = handle_key_history(str, &pos, 1);
+            break;
+        case KEY_DOWN:
+            str = handle_key_history(str, &pos, 2);
+            break;
+        case KEY_RIGHT:
+            if (pos < strlen(str))
                 cursorforward(&pos);
-            }
-        } else if (c == KEY_LEFT) {
-            if (pos > 0) {
+            break;
+        case KEY_LEFT:
+            if (pos > 0)
                 cursorbackward(&pos);
-            }
-        } else if (c == KEY_TAB) {
+            break;
+        case KEY_TAB:
             str = handle_key_tab(str, &pos, sh);
-        } else {
+            break;
+        default:
             putchar(c);
             str[pos++] = c;
+            break;
         }
         if (pos >= 1000)
             exit(84);

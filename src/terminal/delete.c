@@ -20,7 +20,7 @@ char *modified_str_delete(size_t pos, char *str)
         return (tmp);
     }
     pos += 1;
-    for ( ; str[pos] != '\0'; pos++, i++)
+    for (; str[pos] != '\0'; pos++, i++)
         tmp[i] = str[pos];
     tmp[i] = '\0';
     return (tmp);

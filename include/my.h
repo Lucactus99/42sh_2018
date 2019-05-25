@@ -165,10 +165,10 @@ char *find_autocompletion_system(sh_t *sh, char *str);
 // TERMINAL
 void cursorbackward(size_t *pos);
 void cursorforward(size_t *pos);
-char *handle_key_down(char *str, size_t *pos);
-char *handle_key_up(char *str, size_t *pos);
+char *handle_key_history(char *str, size_t *pos, int mode);
 void my_reset(size_t *pos, char **str);
 char *handle_key_back(char *str, size_t *pos);
 void clean_terminal(size_t *pos, size_t actual_pos);
+int kbget(struct termios term, struct termios oterm);
 
 #endif //MY_H_
