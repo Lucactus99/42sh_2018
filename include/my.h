@@ -63,6 +63,7 @@ int do_history(void);
 // ALIAS
 int check_alias(sh_t *sh, int i);
 int do_alias(sh_t *sh, int i);
+char *get_path_alias(char *path);
 
 // LIB
 void my_putchar(char);
@@ -95,6 +96,7 @@ void free_sh(sh_t *sh);
 char **my_strdup_2d(char **tab, int lines);
 int is_binary_operation(char *actual);
 char *check_binary_op(char *str);
+char **remove_quote(char **tab);
 
 // COMMANDS
 int do_command(sh_t *sh);

@@ -7,7 +7,7 @@
 
 #include "my.h"
 
-static char *get_path_alias(char *path)
+char *get_path_alias(char *path)
 {
     char pwd[128];
 

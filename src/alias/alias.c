@@ -31,27 +31,18 @@ static int check_existing_alias(FILE *fp, char *actual)
     return (0);
 }
 
-static char *get_path_alias(char *path)
+static void write_name(sh_t *sh, int i, int a, FILE *fp)
 {
-    char pwd[128];
-
-    getcwd(pwd, sizeof(pwd));
-    if (pwd == NULL || pwd[0] == '\0')
-        return (NULL);
-    path = malloc(sizeof(char) * (strlen(pwd) + strlen("/.alias") + 1));
-    strcpy(path, pwd);
-    strcat(path, "/");
-    strcat(path, ".alias");
-    return (path);
+    for (int j = 0; sh->args[i][a][j] != '\0'; j++) {
+        if (sh->args[i][a][j] != '"' && sh->args[i][a][j] != 39)
+            fwrite(&sh->args[i][a][j], sizeof(char), 1, fp);
+    }
 }
 
 static void write_alias(sh_t *sh, int i, FILE *fp, size_t value)
 {
     for (int a = 2; sh->args[i][a] != NULL; a++) {
-        for (int j = 0; sh->args[i][a][j] != '\0'; j++) {
-            if (sh->args[i][a][j] != '"' && sh->args[i][a][j] != 39)
-                fwrite(&sh->args[i][a][j], sizeof(char), 1, fp);
-        }
+        write_name(sh, i, a, fp);
         if (sh->args[i][a + 1] != NULL)
             fwrite(" ", sizeof(char), 1, fp);
     }

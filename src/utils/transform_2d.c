@@ -6,8 +6,9 @@
 */
 
 #include <stdlib.h>
+#include "my.h"
 
-static int count_lines(char *str, char sep)
+static int count_nbr_lines(char *str, char sep)
 {
     int count = 0;
 
@@ -29,30 +30,9 @@ static int is_quote(int quote, int i, char *str)
     return (quote);
 }
 
-static char **move_tab(char **tab, int i, int j)
-{
-    while (tab[i][j] != '\0') {
-        tab[i][j] = tab[i][j + 1];
-        j++;
-    }
-    tab[i][j] = '\0';
-    return (tab);
-}
-
-static char **remove_quote(char **tab)
-{
-    for (int i = 0; tab[i] != NULL; i++) {
-        for (int j = 0; tab[i][j] != '\0'; j++) {
-            if (tab[i][j] == '"')
-                return (remove_quote(move_tab(tab, i, j)));
-        }
-    }
-    return (tab);
-}
-
 char **transform_2d(char *str, char sep)
 {
-    char **str_2d = malloc(sizeof(char *) * (count_lines(str, sep) + 2));
+    char **str_2d = malloc(sizeof(char *) * (count_nbr_lines(str, sep) + 2));
     int j = 0;
     int k = 0;
     int i = 0;

@@ -20,6 +20,16 @@ static char *get_str(sh_t *sh, int mode, char *str)
     return (str);
 }
 
+static void manage_line(sh_t *sh, char *str)
+{
+    if (str != NULL && str[0] != 0) {
+        sh->is_binary_op = is_binary_operation(str);
+        if (sh->is_binary_op > 0)
+            str = check_binary_op(str);
+        manage_user_input(sh, str);
+    }
+}
+
 static int main_loop(sh_t *sh, int mode)
 {
     char *str = "lucas";
@@ -27,12 +37,7 @@ static int main_loop(sh_t *sh, int mode)
     while (str != NULL && strcmp(str, "exit") != 0) {
         str = get_str(sh, mode, str);
         sh->not_found = 0;
-        if (str != NULL && str[0] != 0) {
-            sh->is_binary_op = is_binary_operation(str);
-            if (sh->is_binary_op > 0)
-                str = check_binary_op(str);
-            manage_user_input(sh, str);
-        }
+        manage_line(sh, str);
         if (mode < 0)
             return (0);
     }
