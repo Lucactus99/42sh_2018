@@ -11,12 +11,10 @@ static void do_exec(sh_t *sh, int i)
 {
     if (strncmp(sh->command[i], "./", 2) == 0)
         do_binary(sh, i);
-    else {
-        if (execve(sh->command[i], sh->args[i], sh->env) < 0) {
-            if (errno != 2) {
-                my_putstr_err(sh->command[0]);
-                my_putstr_err(": Permission denied.\n");
-            }
+    else if (execve(sh->command[i], sh->args[i], sh->env) < 0) {
+        if (errno != 2) {
+            my_putstr_err(sh->command[0]);
+            my_putstr_err(": Permission denied.\n");
         }
         exit(0);
     }
@@ -27,12 +25,9 @@ static int do_pipe_first(sh_t *sh, int i, int pipes[], int out)
     if (sh->command[i + 1] != NULL) {
         if (dup2(pipes[1], 1) < 0)
             exit(84);
-    }
-    else {
-        if (sh->redirection != 0) {
-            if (dup2(out, 1) < 0)
-                exit(84);
-        }
+    } else if (sh->redirection != 0) {
+        if (dup2(out, 1) < 0)
+            exit(84);
     }
     close(pipes[0]);
     if (is_builtin(sh, i) == 1)

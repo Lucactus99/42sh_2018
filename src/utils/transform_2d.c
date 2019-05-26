@@ -43,10 +43,8 @@ static char **remove_quote(char **tab)
 {
     for (int i = 0; tab[i] != NULL; i++) {
         for (int j = 0; tab[i][j] != '\0'; j++) {
-            if (tab[i][j] == '"') {
-                tab = move_tab(tab, i, j);
-                return (remove_quote(tab));
-            }
+            if (tab[i][j] == '"')
+                return (remove_quote(move_tab(tab, i, j)));
         }
     }
     return (tab);

@@ -7,6 +7,17 @@
 
 #include "my.h"
 
+void print_errors_exec(char *command)
+{
+    if (errno == 8) {
+        my_putstr_err(command);
+        my_putstr_err(": Exec format error. Wrong Architecture.\n");
+    } else if (errno != 2) {
+        my_putstr_err(command);
+        my_putstr_err(": Permission denied.\n");
+    }
+}
+
 char **new_path_to_env(char **env)
 {
     int j = 0;

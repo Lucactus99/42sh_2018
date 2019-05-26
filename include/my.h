@@ -141,6 +141,7 @@ void check_redirection_errors(sh_t *sh, char *);
 int put_command_not_found(sh_t *sh, int);
 int pipe_after_redirection(char *);
 char *modify_actual_redirection(char *actual, char *redirection);
+void print_errors_exec(char *command);
 
 // GLOBAL
 void manage_user_input(sh_t *sh, char *);

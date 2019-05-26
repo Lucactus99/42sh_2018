@@ -47,13 +47,7 @@ static void check_command(sh_t *sh)
         if (sh->redirection == 3)
             sh->args[0] = add_args(sh->args[0], sh->redirection_name);
         if (execve(sh->command[0], sh->args[0], sh->env) < 0) {
-            if (errno == 8) {
-                my_putstr_err(sh->command[0]);
-                my_putstr_err(": Exec format error. Wrong Architecture.\n");
-            } else if (errno != 2) {
-                my_putstr_err(sh->command[0]);
-                my_putstr_err(": Permission denied.\n");
-            }
+            print_errors_exec(sh->command[0]);
         }
     } else {
         for (int i = 0; i < sh->nbr_command; i++)

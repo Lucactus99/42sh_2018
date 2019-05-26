@@ -51,12 +51,10 @@ static char *do_db_left_redirection(char *word)
     char *tmp = NULL;
 
     do {
-        if (str == NULL) {
-            if (tmp != NULL)
-                str = strdup(tmp);
-        } else {
+        if (str == NULL && tmp != NULL)
+            str = strdup(tmp);
+        else
             str = get_new_str(tmp, str);
-        }
         if (isatty(0))
             my_putstr("? ");
         tmp = get_next_line(0);
